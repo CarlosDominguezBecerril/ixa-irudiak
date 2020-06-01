@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="../static/css/style.css">
+    <!-- Javascript-->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <title>IXA-Taldea Index</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#"> <img src="../static/pictures/ixa-logo.png" width="30" height="30"
+                class="d-inline-block align-top" alt="ixa-team logo">
+            IXA Taldea</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                {% for nav in menu %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="application">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                {% for model in models %}
+                {% if model[4] %}
+                <li class="nav-item">
+                    <a class="nav-link active" id="{{model[1]}}-tab" data-toggle="tab" href="#{{model[1]}}" role="tab"
+                        aria-controls="{{model[1]}}" aria-selected="true">{{model[0]}}</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" id="{{model[1]}}-tab" data-toggle="tab" href="#{{model[1]}}" role="tab"
+                        aria-controls="{{model[1]}}" aria-selected="false">{{model[0]}}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+                <li class="nav-item">
+                    <a class="nav-link" id="compare-tab" data-toggle="tab" href="#compare" role="tab"
+                        aria-controls="compare" aria-selected="false">Compare</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                {% for model in models %}
+                {% if model[4] %}
+                <div class="tab-pane fade show active" id="{{model[1]}}" role="tabpanel"
+                    aria-labelledby="{{model[1]}}-tab">
+                    {% else %}
+                    <div class="tab-pane fade" id="{{model[1]}}" role="tabpanel" aria-labelledby="{{model[1]}}-tab">
+                        {% endif %}
+                        <div class="formInput">
+                            <h3>About the model</h3>
+                            <hr>
+                            <p>{{model[2]}}</p>
+
+                            <form>
+                                <h3>Select a picture</h3>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <input type="radio" id="image1" name="randomPicture">
+                                        <label for="image1" class="labelRandom"><img
+                                                src="../static/pictures/ixa-logo.png"
+                                                class="img-fluid img-thumbnail"></label>
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="radio" id="image2" name="randomPicture">
+                                        <label for="image2" class="labelRandom"><img
+                                                src="../static/pictures/ixa-logo.png"
+                                                class="img-fluid img-thumbnail"></label>
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="radio" id="image3" name="randomPicture">
+                                        <label for="image3" class="labelRandom"><img
+                                                src="../static/pictures/ixa-logo.png"
+                                                class="img-fluid img-thumbnail"></label>
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="radio" id="image4" name="randomPicture">
+                                        <label for="image4" class="labelRandom"><img
+                                                src="../static/pictures/ixa-logo.png"
+                                                class="img-fluid img-thumbnail"></label>
+                                    </div>
+                                </div>
+                                <h3>Or upload a picture</h3>
+                                <hr>
+                                <div class="form-group">
+                                    <div class="custom-file">
+                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                        <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                            aria-describedby="inputGroupFileAddon01" name="userFile">
+                                    </div>
+                                </div>
+                                <hr>
+                                <button type="reset" class="btn btn-danger mb-2">Reset</button>
+                                <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="tab-pane fade" id="compare" role="tabpanel" aria-labelledby="compare-tab">
+                        <div class="formInput"></div>
+                        <h3> Compare different models</h3>
+                        <hr>
+                        <form>
+                            {% for model in models %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <input type="checkbox" aria-label="Checkbox for following text input">
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" aria-label="Text input with checkbox" disabled
+                                    placeholder="{{model[0]}}">
+                            </div>
+                            {% endfor %}
+                            <hr>
+                            <button type="reset" class="btn btn-danger mb-2">Reset</button>
+                            <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <footer class="page-footer font-small">
+            <!-- Copyright -->
+            <div class="footer-copyright text-center py-3">© 2020 Copyright:
+                <a href="http://ixa.si.ehu.es/"> http://ixa.si.ehu.es/</a>
+            </div>
+            <!-- Copyright -->
+        </footer>
+        <!-- Footer -->
+</body>
+
+</html>

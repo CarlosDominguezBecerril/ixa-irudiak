@@ -1,0 +1,25 @@
+.application {
+    margin-top: 1%;
+}
+
+.cardDeck {
+    margin-top: 1%;
+}
+
+.formInput {
+    margin-top: 1%;
+}
+
+.labelRandom:before {
+    content: url("https://cdn1.iconfinder.com/data/icons/windows8_icons_iconpharm/26/unchecked_checkbox.png");
+    position: absolute;
+    z-index: 100;
+}
+
+:checked+.labelRandom:before {
+    content: url("https://cdn1.iconfinder.com/data/icons/windows8_icons_iconpharm/26/checked_checkbox.png");
+}
+
+input[type=radio] {
+    display: none;
+}
