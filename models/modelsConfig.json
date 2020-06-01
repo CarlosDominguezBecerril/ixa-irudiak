@@ -1,0 +1,16 @@
+{
+    "applications": [
+        {   
+            "short_name": "image_cap",
+            "name": "Image Captioning",
+            "path": "./models/image_captioning",
+            "description": "Image captioning"
+        },
+        {   
+            "short_name": "app2",
+            "name": "Aplicacion 2",
+            "path": "./models/application2",
+            "description": "Aplicacion 2 descripcion"
+        }
+    ]
+}

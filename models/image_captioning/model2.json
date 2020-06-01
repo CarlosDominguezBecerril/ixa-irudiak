@@ -1,0 +1,7 @@
+{
+    "name": "modelTest2",
+    "description": "model2 description",
+    "model_path" : "./models/image_captioning/model2.h5",
+    "attributes" : [],
+    "file_format": [".jpg", ".jpeg", ".png"]
+}
