@@ -10,14 +10,19 @@
     margin-top: 1%;
 }
 
+.randomPicture{
+    width: 260px;
+    height: 260px;
+}
+
 .labelRandom:before {
-    content: url("https://cdn1.iconfinder.com/data/icons/windows8_icons_iconpharm/26/unchecked_checkbox.png");
+    /*content: url("https://cdn1.iconfinder.com/data/icons/windows8_icons_iconpharm/26/unchecked_checkbox.png");*/
     position: absolute;
     z-index: 100;
 }
 
 :checked+.labelRandom:before {
-    content: url("https://cdn1.iconfinder.com/data/icons/windows8_icons_iconpharm/26/checked_checkbox.png");
+    content: url("../pictures/checked.png");
 }
 
 input[type=radio] {
