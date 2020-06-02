@@ -37,7 +37,7 @@ def parse_applications(app_path: str):
             if app["short_name"] in applications:
                 print("There is already an application with the name: {}".format(app["short_name"]))
             else:
-                applications[app["short_name"]] = Application(app["name"], app["description"], app["path"])
+                applications[app["short_name"].replace(" ", "")] = Application(app["name"], app["description"], app["path"])
 
     return applications
 
@@ -74,3 +74,39 @@ def parse_application_model(application: Application):
         # Add the model to the application
         if validJson:
             application.add_model(Model(data["name"], data["description"], data["model_path"], data["attributes"], data["file_format"]))
+
+def parse_config(config_path: str):
+
+    """
+    Given the path of the configuration file returns a dictionary with all the elements.
+
+    config_path(String): Path to a json file. 
+
+    """
+    with open(config_path) as f:
+        data = json.load(f)
+
+    compulsory_args = ["models_path", "random_pictures_path", "upload_folder"]
+    non_compulsory_args = ["port", "number_of_pictures_to_show"]
+    error_arguments = ["number_of_random_pictures"]
+
+    # Compulsory arguments
+    for arg in compulsory_args:
+        if arg not in data:
+            raise FileNotFoundError("Missing argument '{}' in '{}'".format(arg, config_path))
+        if arg == "upload_folder":
+            if not (data[arg].startswith("/static") or data[arg].startswith("static")):
+                raise FileNotFoundError("Argument '{}' needs to be inside 'static' folder. Actual path: {}".format(arg, data[arg]))   
+    # Non compulsory arguments
+    for arg in non_compulsory_args:
+        if arg not in data:
+            if arg == "port":
+                data["port"] = 5000
+            elif arg == "number_of_pictures_to_show":
+                data["number_of_pictures_to_show"] = 4
+
+    # Error arguments
+    for arg in error_arguments:
+        if arg in data:
+            raise FileNotFoundError("The argument '{}' in '{}' cannot be used".format(arg, config_path))
+    return data

@@ -3,5 +3,5 @@
     "description": "model3 description",
     "model_path" : "./models/image_captioning/model3.h5",
     "attributes" : [],
-    "file_format": [".jpg", ".jpeg", ".png"]
+    "file_format": [".jpg"]
 }
