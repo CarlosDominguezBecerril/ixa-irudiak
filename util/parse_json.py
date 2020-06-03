@@ -1,6 +1,7 @@
 from domain.application import Application
 from domain.model import Model
 import json
+import os
 from os import listdir
 from os.path import isfile, join
 
@@ -48,8 +49,11 @@ def parse_models(applicationList: dict):
 
     applicationList (Dictionary): dictionary with the "Applications"
     """
-    for app in applicationList.keys():
+    for app in list(applicationList.keys()):
         parse_application_model(applicationList[app])
+        if len(applicationList[app].models) == 0:
+            print("{} doesn't have any model associated. Removing this application...".format(applicationList[app].name))
+            applicationList.pop(app, None)
         
 
 def parse_application_model(application: Application):
@@ -73,7 +77,7 @@ def parse_application_model(application: Application):
 
         # Add the model to the application
         if validJson:
-            application.add_model(Model(data["name"], data["description"], data["model_path"], data["attributes"], data["file_format"]))
+            application.add_model(Model(data["name"].replace(" ", "-"), data["description"], data["model_path"], data["attributes"], data["file_format"]))
 
 def parse_config(config_path: str):
 
@@ -100,9 +104,20 @@ def parse_config(config_path: str):
             else:
                 if data[arg][-1] == "/":
                     data[arg]  = data[arg][:-1]
+                # Create folder if needed
+                if not os.path.exists(data[arg]):
+                    print("Creating folder: {}".format(data[arg]))
+                    os.makedirs(data[arg])
+                else:
+                    # Remove files in the folder
+                    for f in listdir(data[arg]):
+                        if isfile(join(data[arg], f)):
+                            os.remove(join(data[arg], f))
+
         if arg == "random_pictures_path":
             if data[arg][-1] == "/":
                 data[arg]  = data[arg][:-1]
+
     # Non compulsory arguments
     for arg in non_compulsory_args:
         if arg not in data:

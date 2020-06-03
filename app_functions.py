@@ -48,7 +48,7 @@ def random_picture_input(appNames:list, app_name:str, data:dict, applications:di
             if len(models_list) == 0:
                 return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "You didn't select a model!. Try again")
             # Retrieve allowed files
-            allowed_files = retrieve_allowed_files(models_list, app_name, applications, CONFIG)
+            allowed_files = retrieve_allowed_files(models_list, app_name, applications)
 
             picture_in_system = False
             for f in listdir(CONFIG["random_pictures_path"] + "/"):
@@ -112,7 +112,7 @@ def user_file_input(appNames:list, app_name:str, data:dict, applications:dict, C
             return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "You didn't select a model!. Try again")
 
         # Retrieve allowed files
-        allowed_files = retrieve_allowed_files(models_list, app_name, applications, CONFIG)
+        allowed_files = retrieve_allowed_files(models_list, app_name, applications)
         # Save the file
         if file and "." + file.filename.split(".")[1] in allowed_files:
             filename = secure_filename(file.filename)
@@ -125,7 +125,7 @@ def user_file_input(appNames:list, app_name:str, data:dict, applications:dict, C
 
     return render_template("wrongOutput.html", menu = appNames, title = "Error", info= "Application name not found")
 
-def retrieve_allowed_files(models_name_list:list, app_name:str, applications: dict, CONFIG: dict):
+def retrieve_allowed_files(models_name_list:list, app_name:str, applications: dict):
 
     """
     Function that handles the allowed files of given models name. In case of more than one models the intersection of all of them is made.
@@ -133,7 +133,6 @@ def retrieve_allowed_files(models_name_list:list, app_name:str, applications: di
     app_name (str): The name of app used by the user
     models_name_list (list): names of the models
     applications (dict): Application list
-    CONFIG (dict): configuration of the server
     """
 
     allowed_files = set()
