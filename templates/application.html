@@ -59,15 +59,15 @@
         <div class="application">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 {% for model in models %}
-                {% if model[4] %}
+                {% if model[3] %}
                 <li class="nav-item">
-                    <a class="nav-link active" id="{{model[1]}}-tab" data-toggle="tab" href="#{{model[1]}}" role="tab"
-                        aria-controls="{{model[1]}}" aria-selected="true">{{model[0]}}</a>
+                    <a class="nav-link active" id="{{model[0]}}-tab" data-toggle="tab" href="#{{model[0]}}" role="tab"
+                        aria-controls="{{model[0]}}" aria-selected="true">{{model[0]}}</a>
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" id="{{model[1]}}-tab" data-toggle="tab" href="#{{model[1]}}" role="tab"
-                        aria-controls="{{model[1]}}" aria-selected="false">{{model[0]}}</a>
+                    <a class="nav-link" id="{{model[0]}}-tab" data-toggle="tab" href="#{{model[0]}}" role="tab"
+                        aria-controls="{{model[0]}}" aria-selected="false">{{model[0]}}</a>
                 </li>
                 {% endif %}
                 {% endfor %}
@@ -78,23 +78,22 @@
             </ul>
             <div class="tab-content">
                 {% for model in models %}
-                {% if model[4] %}
-                <div class="tab-pane fade show active" id="{{model[1]}}" role="tabpanel"
-                    aria-labelledby="{{model[1]}}-tab">
+                {% if model[3] %}
+                <div class="tab-pane fade show active" id="{{model[0]}}" role="tabpanel"
+                    aria-labelledby="{{model[0]}}-tab">
                     {% else %}
-                    <div class="tab-pane fade" id="{{model[1]}}" role="tabpanel" aria-labelledby="{{model[1]}}-tab">
+                    <div class="tab-pane fade" id="{{model[0]}}" role="tabpanel" aria-labelledby="{{model[0]}}-tab">
                         {% endif %}
                         <div class="formInput">
                             <h3>About the model</h3>
                             <hr>
-                            <p>{{model[2]}}</p>
+                            <p>{{model[1]}}</p>
 
                             <form method="POST" action="/{{app}}/output" enctype=multipart/form-data id={{model[0]}}>
                                 <h3>Select a picture</h3>
                                 <hr>
-                                {% for pictureList in pictures %}
                                 <div class="row">
-                                    {% for pic in pictureList %}
+                                    {% for pic in pictures %}
                                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
                                         <input type="radio" id="{{model[0]}}{{pic}}" name="randomPicture{{model[0]}}" value="{{pic}}" onClick="pictureSelected('{{model[0]}}');">
                                         <label for="{{model[0]}}{{pic}}" class="labelRandom"><img
@@ -103,20 +102,19 @@
                                     </div>
                                     {% endfor %}
                                 </div>
-                                {% endfor %}
                                 <h3>Or upload a picture</h3>
                                 <hr>
                                 <div class="form-group">
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" id="{{model[0]}}File"
                                             aria-describedby="{{model[0]}}FileD" name="userFile"
-                                            onChange="fileUploaded(this, '{{model[0]}}')" accept="{{model[3]}}">
+                                            onChange="fileUploaded(this, '{{model[0]}}')" accept="{{model[2]}}">
                                         <label class="custom-file-label" for="{{model[0]}}File">Choose file</label>
                                         <small id="Help" class="form-text text-muted">Accepted file formats:
-                                            {{model[3]}}</small>
+                                            {{model[2]}}</small>
                                     </div>
                                 </div>
-                                <input type="hidden" name="model" value="{{model[1]}}">
+                                <input type="hidden" name="model" value="{{model[0]}}">
                                 <input type="hidden" name="method" id="{{model[0]}}Method" value="non-selected">
                                 <hr>
                                 <button type="reset" class="btn btn-danger mb-2">Reset</button>
@@ -143,9 +141,8 @@
                             {% endfor %}
                             <h3>Select a picture</h3>
                             <hr>
-                            {% for pictureList in pictures %}
                             <div class="row">
-                                {% for pic in pictureList %}
+                                {% for pic in pictures %}
                                 <div class="col-3">
                                     <input type="radio" id="compare{{pic}}" name="randomPicture" value="{{pic}}" onClick="pictureSelected('compare');">
                                     <label for="compare{{pic}}" class="labelRandom"><img
@@ -154,7 +151,6 @@
                                 </div>
                                 {% endfor %}
                             </div>
-                            {% endfor %}
                             <h3>Or upload a picture</h3>
                             <hr>
                             <div class="form-group">

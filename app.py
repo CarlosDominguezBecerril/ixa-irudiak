@@ -90,7 +90,8 @@ def config():
         parse_json.parse_models(applications)
 
         # Information about random pictures
-        CONFIG["number_of_random_pictures"], CONFIG["random_picture_list"] = pictures.number_of_pictures_in_folder(CONFIG["random_pictures_path"])
+        CONFIG["random_picture_list"] = pictures.retrieve_pictures_names_in_folder(CONFIG["random_pictures_path"])
+        CONFIG["number_of_random_pictures"] = len(CONFIG["random_picture_list"])
         return True
     except FileNotFoundError as err:
         print(err)
