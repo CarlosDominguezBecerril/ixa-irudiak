@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 
 import random
 
-def random_picture_input(appNames, app_name, data, applications, CONFIG):
+def random_picture_input(appNames:list, app_name:str, data:dict, applications:dict, CONFIG:dict):
     """
     Function that handles random pictures
 
@@ -68,7 +68,7 @@ def random_picture_input(appNames, app_name, data, applications, CONFIG):
             return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "Error while trying to retrieve the random picture")
     return render_template("wrongOutput.html", menu = appNames, title = "Error", info= "Application name not found")
 
-def user_file_input(appNames, app_name, data, applications, CONFIG):
+def user_file_input(appNames:list, app_name:str, data:dict, applications:dict, CONFIG:dict):
 
     """
     Function that handles the pictures uploaded by a user
@@ -125,10 +125,11 @@ def user_file_input(appNames, app_name, data, applications, CONFIG):
 
     return render_template("wrongOutput.html", menu = appNames, title = "Error", info= "Application name not found")
 
-def retrieve_allowed_files(models_name_list, app_name, applications, CONFIG):
+def retrieve_allowed_files(models_name_list:list, app_name:str, applications: dict, CONFIG: dict):
 
     """
-    Function that handles the allowed files of given models
+    Function that handles the allowed files of given models name. In case of more than one models the intersection of all of them is made.
+
     app_name (str): The name of app used by the user
     models_name_list (list): names of the models
     applications (dict): Application list
@@ -143,13 +144,93 @@ def retrieve_allowed_files(models_name_list, app_name, applications, CONFIG):
             allowed_files = allowed_files.intersection(set(applications[app_name].models[i].file_format))
     return allowed_files
 
-def fake_values(models_name_list):
+def fake_values(models_name_list: list):
 
     """
-        This function creates some fake values for each model in the list.
-        models_name_list (list): List of the models names
+    This function generates some fake values for each model in the list.
+
+    models_name_list (list): List of the models names
     """
     output = []
     for i in models_name_list:
         output.append([i, random.randint(0, 10000)])
     return output
+
+
+def get_menu_items(selected_item:str, applications: dict):
+
+    """
+    This function returns a list with the values of the menu. For each of the we add the short name, the name and a boolean to specify
+    if the item needs to be highlighted
+
+    selected_item (str): Element to be highlighted
+    applications (dict): list of applications
+
+    """
+    # Home value
+    menu_items = [["", "Home", False]]
+
+    # Highlight if it is the selected item
+    if selected_item == "Home":
+        menu_items[0][2] = True
+
+    # For each application
+    for i in applications.keys():
+        menu_items.append([i, applications[i].name, False])
+        # Highlight if it is the selected item
+        if i == selected_item:
+            menu_items[-1][2] = True
+    return menu_items
+
+def get_apps_overview(applications: dict):
+
+    """
+    This function retrieves an overview of the applications (application name and description)
+
+    applications (dict): list of applications
+    """
+    # If no applications return an empty list
+    if len(applications.keys()) == 0:
+        return []
+    
+    # Add the information of each application.
+    overview, i = [[]], 0
+    for key in applications.keys():
+        overview[i].append((applications[key].name, key, applications[key].description))
+
+        # Every two applications we create a new list inside (this if for aesthetics of the webpage).
+        if len(overview[i]) == 2:
+            i += 1
+            overview.append([]) 
+
+    return overview
+
+def get_models_by_app(app_name: str, applications: dict):
+
+    """
+    This function retrieves information (model name, model description and allowed file formats) and restriction of each model.
+
+    app_name (str): name of the application
+    applications (dict): list of applications
+
+    """
+    models = []
+    restriction = []
+
+    # Iterate through all the models
+    for key in applications[app_name].models.keys():
+        # get the model and append the information
+        model = applications[app_name].models[key]
+        models.append([model.name, model.description, ", ".join(model.file_format), False])
+
+        # Restrictions taking into account all the models (used for comparing models)
+        if len(restriction) == 0:
+            restriction = set(model.file_format)
+        else:
+            restriction = restriction.intersection(set(model.file_format))
+
+    # The first model needs to be to True in order to activate the first "tab" of the HTML code
+    if len(models) > 0:
+        models[0][3] = True
+
+    return models, ", ".join(list(restriction))

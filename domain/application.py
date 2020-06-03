@@ -8,14 +8,23 @@ class Application:
         self.models = {}
     
     def add_model(self, content: Model):
+        """
+        This function adds a model to the application
+
+        content (Model): model to include
+        """
         if content.name in self.models:
             print("The model is already in the list")
         else:
             self.models[content.name] = content
 
     def remove_model(self, model_name: str):
-        result = self.models.pop(model_name, False)
+        """
+        This function removes a model from the application
 
+        model_name (str): name of the model to delete
+        """
+        result = self.models.pop(model_name, False)
         if not result:
             print("The model {} doesn't exist".format(model_name))
 

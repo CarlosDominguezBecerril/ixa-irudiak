@@ -15,22 +15,38 @@ applications = {}
 
 @app.route('/')
 def index():
-    return render_template("index.html", title = "index", menu = get_menu_items("Home"), applications = get_apps_overview())
+    """
+    This function generates an overview of all the applications.
+    """
+    return render_template("index.html", title = "index", menu = app_functions.get_menu_items("Home", applications), applications = app_functions.get_apps_overview(applications))
 
 @app.route('/<app_name>')
-def application(app_name):
-    appNames = get_menu_items(app_name)
+def application(app_name:str):
+    """
+    This function genererates the "app_name" page.
+
+    app_name (str): name of the application that the user is requesting
+    """
+    # Menu generation
+    appNames = app_functions.get_menu_items(app_name, applications)
+
+    # Check if the application exists otherwise 404 error.
     if app_name in applications:
-        modelsList, restriction = get_models_by_app(app_name)
+        # Retrieve the models information and restrictions (file restrictions)
+        modelsList, restriction = app_functions.get_models_by_app(app_name, applications)
         return render_template("application.html", compare = restriction, title = applications[app_name].name, app = app_name, menu = appNames, models = modelsList, pictures = pictures.random_pictures(CONFIG["number_of_pictures_to_show"], CONFIG["random_picture_list"]))
     else:
        return render_template("404.html", menu = appNames), 404 
 
 @app.route('/<app_name>/output', methods=['POST'])
-def output(app_name):
+def output(app_name:str):
+    """
+    This function handles the input that the user gives (file uploaded by a user or random picture) and gives an output.
 
+    app_name (str): name of the application that the user is requesting
+    """
     # Menu generation
-    appNames = get_menu_items(app_name)
+    appNames = app_functions.get_menu_items(app_name, applications)
 
     # Form data
     data = request.form
@@ -46,56 +62,34 @@ def output(app_name):
     elif "random-picture" == method:
         return app_functions.random_picture_input(appNames, app_name, data, applications, CONFIG)
 
+    # Any other "method" gives an error
     return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "Unexpected error")
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template("404.html", title = "404", menu = get_menu_items("")), 404
 
-def get_menu_items(selected_item):
-    menu_items = [["", "Home", False]]
-    if selected_item == "Home":
-        menu_items[0][2] = True
-    for i in applications.keys():
-        menu_items.append([i, applications[i].name, False])
-        if i == selected_item:
-            menu_items[-1][2] = True
-    return menu_items
-
-def get_apps_overview():
-    if len(applications.keys()) == 0:
-        return []
-    overview, i = [[]], 0
-    for key in applications.keys():
-        overview[i].append((applications[key].name, key, applications[key].description))
-        if len(overview[i]) == 2:
-            i += 1
-            overview.append([]) 
-
-    return overview
-
-def get_models_by_app(app_name: str):
-    models = []
-    restriction = []
-    first = True
-    for key in applications[app_name].models.keys():
-        model = applications[app_name].models[key]
-        models.append((model.name, model.name.replace(" ", "-"), model.description, ", ".join(model.file_format), first))
-        first = False
-
-        if len(restriction) == 0:
-            restriction = set(model.file_format)
-        else:
-            restriction = restriction.intersection(set(model.file_format))
-    
-    return models, ", ".join(list(restriction))
+    """
+    This function handles 404 errors.
+    """
+    return render_template("404.html", title = "404", menu = app_functions.get_menu_items("", applications)), 404
 
 def config():
+
+    """
+    This function configurates the global variables "applications" and "CONFIG".
+    """
     global CONFIG, applications
     try:
+        # Parse configuration file
         CONFIG = parse_json.parse_config(CONFIG_PATH)
+
+        # Parse applications
         applications = parse_json.parse_applications(CONFIG["models_path"])
+        
+        # Parse models
         parse_json.parse_models(applications)
+
+        # Information about random pictures
         CONFIG["number_of_random_pictures"], CONFIG["random_picture_list"] = pictures.number_of_pictures_in_folder(CONFIG["random_pictures_path"])
         return True
     except FileNotFoundError as err:
@@ -106,5 +100,7 @@ def config():
         return False
 
 if __name__ == "__main__":
+
+    # If the configuration is valid start the server
     if config():
         app.run(port=CONFIG["port"], debug=True)
