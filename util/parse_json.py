@@ -96,7 +96,13 @@ def parse_config(config_path: str):
             raise FileNotFoundError("Missing argument '{}' in '{}'".format(arg, config_path))
         if arg == "upload_folder":
             if not (data[arg].startswith("/static") or data[arg].startswith("static")):
-                raise FileNotFoundError("Argument '{}' needs to be inside 'static' folder. Actual path: {}".format(arg, data[arg]))   
+                raise FileNotFoundError("Argument '{}' needs to be inside 'static' folder. Actual path: {}".format(arg, data[arg]))
+            else:
+                if data[arg][-1] == "/":
+                    data[arg]  = data[arg][:-1]
+        if arg == "random_pictures_path":
+            if data[arg][-1] == "/":
+                data[arg]  = data[arg][:-1]
     # Non compulsory arguments
     for arg in non_compulsory_args:
         if arg not in data:

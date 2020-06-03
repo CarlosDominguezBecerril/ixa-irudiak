@@ -1,19 +1,17 @@
 from flask import Flask, render_template, url_for, send_from_directory, request
-from flask_bootstrap import Bootstrap
 from domain.application import Application
 from domain.model import Model
 from util import parse_json, pictures
 import os
 from werkzeug.utils import secure_filename
+import app_functions
 
 import random
 
 app = Flask(__name__)
-Bootstrap(app)
-
 CONFIG_PATH = "config.json"
-CONFIG = None
-applications = None
+CONFIG = {}
+applications = {}
 
 @app.route('/')
 def index():
@@ -30,32 +28,25 @@ def application(app_name):
 
 @app.route('/<app_name>/output', methods=['POST'])
 def output(app_name):
-    appNames = get_menu_items(app_name)
-    data = request.form
-    if 'userFile' not in request.files:
-        return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, test = app_name, info= "The file couldn't be upload to the server. Try again")
-    file = request.files['userFile']
-    if file.filename == '':
-        return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, test = app_name, info= "You didn't select a file. Try again")
-    if app_name in applications:
-        allowed_files = set()
-        models_list = []
-        if "model" in data:
-            models_list.append([data["model"], random.randint(1, 10000)])
-            allowed_files = set(applications[app_name].models[data["model"]].file_format)
-        else:
-            for i in data:
-                models_list.append([i[8:], random.randint(1, 10000)])
-                if len(allowed_files) == 0:
-                    allowed_files = set(applications[app_name].models[models_list[-1][0]].file_format)
-                else:
-                    allowed_files = allowed_files.intersection(set(applications[app_name].models[models_list[-1][0]].file_format))
 
-        if file and "." + file.filename.split(".")[1] in allowed_files:
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(CONFIG["upload_folder"], filename))
-            return render_template("output.html", menu = appNames, title = applications[app_name].name, allowed_file = allowed_files, models = models_list, app = applications[app_name].name, picture = CONFIG["upload_folder"] + "/" + file.filename)
-    return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "File extension not valid. Try again")
+    # Menu generation
+    appNames = get_menu_items(app_name)
+
+    # Form data
+    data = request.form
+
+    method = data["method"]
+    # case where nothing is selected
+    if "non-selected" == method:
+        return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "Did you select a picture?")
+    # File uploaded by a user
+    elif "user-file" == method:
+        return app_functions.user_file_input(appNames, app_name, data, applications, CONFIG)
+    # Random picture
+    elif "random-picture" == method:
+        return app_functions.random_picture_input(appNames, app_name, data, applications, CONFIG)
+
+    return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "Unexpected error")
 
 @app.errorhandler(404)
 def page_not_found(e):

@@ -89,15 +89,15 @@
                             <hr>
                             <p>{{model[2]}}</p>
 
-                            <form method="POST" action="/{{app}}/output" enctype=multipart/form-data>
+                            <form method="POST" action="/{{app}}/output" enctype=multipart/form-data id={{model[0]}}>
                                 <h3>Select a picture</h3>
                                 <hr>
                                 {% for pictureList in pictures %}
                                 <div class="row">
                                     {% for pic in pictureList %}
-                                    <div class="col-3">
-                                        <input type="radio" id="image{{pic}}" name="randomPicture">
-                                        <label for="image{{pic}}" class="labelRandom"><img
+                                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                                        <input type="radio" id="{{model[0]}}{{pic}}" name="randomPicture{{model[0]}}" value="{{pic}}" onClick="pictureSelected('{{model[0]}}');">
+                                        <label for="{{model[0]}}{{pic}}" class="labelRandom"><img
                                                 src="../static/randomPictures/{{pic}}"
                                                 class="img-fluid img-thumbnail randomPicture"></label>
                                     </div>
@@ -110,16 +110,17 @@
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" id="{{model[0]}}File"
                                             aria-describedby="{{model[0]}}FileD" name="userFile"
-                                            onChange="fileUploaded(this)" accept="{{model[3]}}" required>
+                                            onChange="fileUploaded(this, '{{model[0]}}')" accept="{{model[3]}}">
                                         <label class="custom-file-label" for="{{model[0]}}File">Choose file</label>
                                         <small id="Help" class="form-text text-muted">Accepted file formats:
                                             {{model[3]}}</small>
                                     </div>
                                 </div>
                                 <input type="hidden" name="model" value="{{model[1]}}">
+                                <input type="hidden" name="method" id="{{model[0]}}Method" value="non-selected">
                                 <hr>
                                 <button type="reset" class="btn btn-danger mb-2">Reset</button>
-                                <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                                <button type="submit" id="{{model[0]}}Submit" class="btn btn-primary mb-2" disabled>Submit</button>
                             </form>
                         </div>
                     </div>
@@ -146,8 +147,8 @@
                             <div class="row">
                                 {% for pic in pictureList %}
                                 <div class="col-3">
-                                    <input type="radio" id="image{{pic}}" name="randomPicture">
-                                    <label for="image{{pic}}" class="labelRandom"><img
+                                    <input type="radio" id="compare{{pic}}" name="randomPicture" value="{{pic}}" onClick="pictureSelected('compare');">
+                                    <label for="compare{{pic}}" class="labelRandom"><img
                                             src="../static/randomPictures/{{pic}}"
                                             class="img-fluid img-thumbnail randomPicture"></label>
                                 </div>
@@ -160,15 +161,16 @@
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="compareFile"
                                         aria-describedby="compareFileFileD" name="userFile"
-                                        onChange="fileUploaded(this)" accept="{{compare}}" required>
+                                        onChange="fileUploaded(this, 'compare')" accept="{{compare}}">
                                     <label class="custom-file-label" for="compareFileFile">Choose file</label>
                                     <small id="Help" class="form-text text-muted">Accepted file formats:
                                         {{compare}}</small>
                                 </div>
                             </div>
+                            <input type="hidden" name="method" id="compareMethod" value="non-selected">
                             <hr>
                             <button type="reset" class="btn btn-danger mb-2">Reset</button>
-                            <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                            <button type="submit" id="compareSubmit" class="btn btn-primary mb-2" disabled>Submit</button>
                         </form>
                     </div>
                 </div>
