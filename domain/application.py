@@ -1,11 +1,12 @@
 from domain.model import Model
 
 class Application:
-    def __init__(self, name: str, description: str, models_path:str):
+    def __init__(self, name: str, description: str, models_path:str, app_type:str):
         self.name = name
         self.description = description
         self.models_path = models_path
         self.models = {}
+        self.app_type = app_type
     
     def add_model(self, content: Model):
         """
@@ -30,8 +31,8 @@ class Application:
 
     
     def __str__(self):
-        models = []
+        models = [] 
         for i in self.models.keys():
             models.append(str(self.models[i]) + "\n")
-        return "Application name: {}.\nApplication description: {}.\nApplication models path: {}.\nNumber of models: {}.\nModels: \n{}".format(self.name, self.description, self.models_path, len(self.models), "".join(models))
+        return "Application name: {}.\nApplication description: {}.\nApplication models path: {}.\nNumber of models: {}.\nModels: \n{}Type: {}\n".format(self.name, self.description, self.models_path, len(self.models), "".join(models), self.app_type)
 

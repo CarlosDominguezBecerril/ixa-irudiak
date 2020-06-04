@@ -18,8 +18,8 @@ def parse_applications(app_path: str):
     with open(app_path) as f:
         data = json.load(f)
 
-    args = ["short_name", "name", "path", "description"]
-
+    args = ["short_name", "name", "path", "description", "type"]
+    allowed_types = set(["image", "text"])
     # If applications attribute doesn't exist finish immediately
     if "applications" not in data:
         return {}
@@ -32,13 +32,16 @@ def parse_applications(app_path: str):
             if arg not in app:
                 print("Missing argument {} in file {}".format(arg, app_path))
                 validJson = False
+            if arg == "type" and app[arg] not in allowed_types:
+                print("The type {} is not allowed. Error found in file {}".format(app[arg], app_path))
+                validJson = False
 
         # Create a new "Application" with the values given
         if validJson:
             if app["short_name"] in applications:
                 print("There is already an application with the name: {}".format(app["short_name"]))
             else:
-                applications[app["short_name"].replace(" ", "")] = Application(app["name"], app["description"], app["path"])
+                applications[app["short_name"].replace(" ", "")] = Application(app["name"], app["description"], app["path"], app['type'])
 
     return applications
 
@@ -64,7 +67,7 @@ def parse_application_model(application: Application):
     application (Application): application
     """
     files = [f for f in listdir(application.models_path) if isfile(join(application.models_path, f))]
-    args = ["name", "description", "model_path", "attributes", "file_format"]
+    args = ["name", "description", "model_info", "attributes", "file_format"]
     for model_path in files:
         with open(application.models_path + "/"+ model_path) as f:
             data = json.load(f)
@@ -77,7 +80,7 @@ def parse_application_model(application: Application):
 
         # Add the model to the application
         if validJson:
-            application.add_model(Model(data["name"].replace(" ", "-"), data["description"], data["model_path"], data["attributes"], data["file_format"]))
+            application.add_model(Model(data["name"].replace(" ", "-"), data["description"], data["model_info"], data["attributes"], data["file_format"]))
 
 def parse_config(config_path: str):
 
@@ -115,8 +118,11 @@ def parse_config(config_path: str):
                             os.remove(join(data[arg], f))
 
         if arg == "random_pictures_path":
-            if data[arg][-1] == "/":
-                data[arg]  = data[arg][:-1]
+            if not (data[arg].startswith("/static") or data[arg].startswith("static")):
+                raise FileNotFoundError("Argument '{}' needs to be inside 'static' folder. Actual path: {}".format(arg, data[arg]))
+            else:
+                if data[arg][-1] == "/":
+                    data[arg]  = data[arg][:-1]
 
     # Non compulsory arguments
     for arg in non_compulsory_args:
