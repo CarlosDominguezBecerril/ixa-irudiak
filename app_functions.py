@@ -9,6 +9,8 @@ from werkzeug.utils import secure_filename
 
 import random
 
+from execute_models import run_all_models
+
 def random_picture_input(appNames:list, app_name:str, data:dict, applications:dict, CONFIG:dict):
     """
     Function that handles random pictures
@@ -59,8 +61,10 @@ def random_picture_input(appNames:list, app_name:str, data:dict, applications:di
                 # check if correct file extension
                 if "." + data[picture_name].split('.')[1] not in allowed_files:
                     return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "File extension not valid. Try again")
+                
                 # Execute the models
-                output = fake_values(models_list)
+                output = run_all_models(models_list, app_name, applications, CONFIG["random_pictures_path"] + "/" + data[picture_name])
+               
                 return render_template("output.html", menu = appNames, title = applications[app_name].name, allowed_file = allowed_files, models = output, app = applications[app_name].name, picture = CONFIG["random_pictures_path"] + "/" + data[picture_name])
             else:
                 return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "The picture doesn't exist in our system")
@@ -117,8 +121,10 @@ def user_file_input(appNames:list, app_name:str, data:dict, applications:dict, C
         if file and "." + file.filename.split(".")[1] in allowed_files:
             filename = secure_filename(file.filename)
             file.save(os.path.join(CONFIG["upload_folder"], filename))
+            
             # Execute the models
-            output = fake_values(models_list)
+            output = run_all_models(models_list, app_name, applications, CONFIG["upload_folder"] + "/" + file.filename)
+
             return render_template("output.html", menu = appNames, title = applications[app_name].name, allowed_file = allowed_files, models = output, app = applications[app_name].name, picture = CONFIG["upload_folder"] + "/" + file.filename)
         else:
             return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "File extension not valid. Try again")

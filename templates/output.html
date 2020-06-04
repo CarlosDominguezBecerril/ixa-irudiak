@@ -62,14 +62,19 @@
             <h5>Model: {% for model in models %} {{model[0]}} {% endfor%}</h5>
             <h5>Allowed files: {% for allow in allowed_file %} {{allow}} {% endfor %}</h5>
             <h5>Picture: {{picture}}</h5>
-            <img src="../{{picture}}" width="auto" height="auto">
+            <img src="../{{picture}}" alt="your picture" class="img-thumbnail">
         </div>
         <div class="application">
             <h3>Output</h3>
             <hr>
             {% for model in models %}
             <h5>Model name: {{model[0]}}</h5>
-            <h5>Output: {{model[1]}}</h5>
+            {% if model[2] == "image" %}
+                <h5>Output:</h5>
+                <img src="{{model[1]}}" alt="your picture" class="img-thumbnail">
+            {% else %}
+                <h5>Output: {{model[1]}}</h5>
+            {% endif %}
             <hr>
             {% endfor%}
         </div>
