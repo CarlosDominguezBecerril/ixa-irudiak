@@ -4,12 +4,14 @@
             "short_name": "image_cap",
             "name": "Image Captioning",
             "path": "./models/image_captioning",
+            "type": "text",
             "description": "Image Captioning is the process of generating textual description of an image. It uses both Natural Language Processing and Computer Vision to generate the captions."
         },
         {   
             "short_name": "app2",
             "name": "Aplicacion 2",
             "path": "./models/application2",
+            "type": "image",
             "description": "Aplicacion 2 descripcion"
         }
     ]
