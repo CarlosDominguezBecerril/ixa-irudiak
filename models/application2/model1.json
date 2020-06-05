@@ -1,7 +1,0 @@
-{
-    "name": "modelTest1",
-    "description": "model1 description",
-    "model_info" : {},
-    "attributes" : [],
-    "file_format": [".jpg", ".jpeg", ".png"]
-}

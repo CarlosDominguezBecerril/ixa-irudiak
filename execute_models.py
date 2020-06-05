@@ -40,7 +40,7 @@ def execute_model(app_name: str, model: Model, user_input: str, app_type: str):
 
     # Application not found. type: picture
     if app_type == "image":
-        return [["Application not found:", "../static/pictures/image_error.jpg", "image"]]
+        return [["Application not found", "../static/pictures/image_error.jpg", "image"]]
 
     # Application not found. type: text
     return [["Application not found", "'{}' application can't be found in the system".format(app_name), "text"]]
@@ -66,8 +66,8 @@ def run_image_cap(model: Model, user_input: str):
             output.append(["Attention plot", model_output[1], "image"])
         else:
         # model not found
-            output.append(["Error in system: ",  "'{}' model can't be found in the system".format(model.name), "text"])
+            output.append(["Error in system",  "'{}' model can't be found in the system".format(model.name), "text"])
         
     except Exception as e:
-        output.append(["Error in model: ",  "Serious error found when trying to use '{}' model. Error: {}".format(model.name, e), "text"])
+        output.append(["Error in model",  "Serious error found when trying to use '{}' model. Error: {}".format(model.name, e), "text"])
     return output

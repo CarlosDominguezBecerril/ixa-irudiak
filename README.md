@@ -18,7 +18,9 @@
 
 ## Running the web server
 
-Execute app.py
+1 Execute app.py
+
+2 Open your web browser and search for "localhost:port", by default "localhost:80" or simply "localhost". The port can be changed in config.json.
 
 ## How to create an application
 
@@ -79,10 +81,10 @@ def run_my_application2(model: Model, user_input: str):
 
         else:
             # model not found
-            output.append(["Error in system: ",  "'{}' model can't be found in the system".format(model.name), "text"])
+            output.append(["Error in system",  "'{}' model can't be found in the system".format(model.name), "text"])
         
     except Exception as e:
-        output.append(["Error in model: ",  "Serious error found when trying to use '{}' model. Error: {}".format(model.name, e), "text"])
+        output.append(["Error in model",  "Serious error found when trying to use '{}' model. Error: {}".format(model.name, e), "text"])
 
     return output
 ```
@@ -121,7 +123,7 @@ def execute_model(app_name: str, model: Model, user_input: str, app_type: str):
 
     # Application not found. type: picture
     if app_type == "image":
-        return [["Application not found:", "../static/pictures/image_error.jpg", "image"]]
+        return [["Application not found", "../static/pictures/image_error.jpg", "image"]]
 
     # Application not found. type: text
     return [["Application not found", "'{}' application can't be found in the system".format(app_name), "text"]]
@@ -212,10 +214,10 @@ def run_my_application2(model: Model, user_input: str):
 
         else:
             # model not found
-            output.append(["Error in system: ",  "'{}' model can't be found in the system".format(model.name), "text"])
+            output.append(["Error in system",  "'{}' model can't be found in the system".format(model.name), "text"])
         
     except Exception as e:
-        output.append(["Error in model: ",  "Serious error found when trying to use '{}' model. Error: {}".format(model.name, e), "text"])
+        output.append(["Error in model",  "Serious error found when trying to use '{}' model. Error: {}".format(model.name, e), "text"])
 
     return output
 ```
