@@ -3,7 +3,8 @@ from domain.model import Model
 
 import random
 
-from models.image_captioning.caption_generation_oier import run_model as oier
+from models.image_captioning.ShowAndTell import run_model as oier
+from models.image_captioning.ShowAttendAndTell import run_model as gorka
 
 def run_all_models(models_list: list, app_name: str, applications: dict, user_input:str):
     """
@@ -20,7 +21,7 @@ def run_all_models(models_list: list, app_name: str, applications: dict, user_in
             continue
         else:
             # For each model create a list with model name, the output of executing the model and the application type
-            output.append([model, execute_model(app_name, applications[app_name].models[model], user_input, applications[app_name].app_type), applications[app_name].app_type])
+            output.append([applications[app_name].models[model].name, execute_model(app_name, applications[app_name].models[model], user_input, applications[app_name].app_type)])
     return output
 
 def execute_model(app_name: str, model: Model, user_input: str, app_type: str):
@@ -39,10 +40,10 @@ def execute_model(app_name: str, model: Model, user_input: str, app_type: str):
 
     # Application not found. type: picture
     if app_type == "image":
-        return "../static/pictures/image_error.jpg"
+        return [["Application not found:", "../static/pictures/image_error.jpg", "image"]]
 
     # Application not found. type: text
-    return "'{}' application can't be found in the system".format(app_name)
+    return [["Application not found", "'{}' application can't be found in the system".format(app_name), "text"]]
 
 def run_image_cap(model: Model, user_input: str):
     """
@@ -52,17 +53,21 @@ def run_image_cap(model: Model, user_input: str):
     model (Model): model that is going to be used to retrieve the information.
     """
 
-    output = ""
+    output = []
     # Using try catch for not having dependencies with errors in tensorflow, pytorch ....
     try:
         # Model 'Oier'
-        if model.name == "Oier":
-            output = oier.run_model(user_input, model.model_info)
+        if model.short_name == "ShowAndTell":
+            model_output = oier.run_model(user_input, model.model_info)
+            output.append(["Output", model_output, "text"])
+        elif model.short_name == "ShowAttendAndTell":
+            model_output = gorka.run_model(user_input, model.model_info)
+            output.append(["Output", model_output[0], "text"])
+            output.append(["Attention plot", model_output[1], "image"])
         else:
         # model not found
-            output = "'{}' model can't be found in the system".format(model.name)
+            output.append(["Error in system: ",  "'{}' model can't be found in the system".format(model.name), "text"])
         
-    except:
-        output = "Serious error found when trying to use '{}' model".format(model.name)
-
+    except Exception as e:
+        output.append(["Error in model: ",  "Serious error found when trying to use '{}' model. Error: {}".format(model.name, e), "text"])
     return output
