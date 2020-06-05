@@ -6,7 +6,7 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import load_model
 
-from models.image_captioning.caption_generation_oier.datasets.image_utils import extract_features_single_photo
+from models.image_captioning.ShowAndTell.datasets.image_utils import extract_features_single_photo
 
 import keras.backend.tensorflow_backend as tb
 
