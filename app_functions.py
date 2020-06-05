@@ -117,15 +117,18 @@ def user_file_input(appNames:list, app_name:str, data:dict, applications:dict, C
 
         # Retrieve allowed files
         allowed_files = retrieve_allowed_files(models_list, app_name, applications)
+        extension = "." + file.filename.split(".")[1]
         # Save the file
-        if file and "." + file.filename.split(".")[1] in allowed_files:
+        if file and extension in allowed_files:
             filename = secure_filename(file.filename)
             file.save(os.path.join(CONFIG["upload_folder"], filename))
-            
-            # Execute the models
-            output = run_all_models(models_list, app_name, applications, CONFIG["upload_folder"] + "/" + file.filename)
+            new_name = generate_random_names() + extension
+            os.rename(os.path.join(CONFIG["upload_folder"], filename), os.path.join(CONFIG["upload_folder"], new_name))
 
-            return render_template("output.html", menu = appNames, title = applications[app_name].name, allowed_file = allowed_files, models = output, app = applications[app_name].name, picture = CONFIG["upload_folder"] + "/" + file.filename)
+            # Execute the models
+            output = run_all_models(models_list, app_name, applications, CONFIG["upload_folder"] + "/" + new_name)
+
+            return render_template("output.html", menu = appNames, title = applications[app_name].name, allowed_file = allowed_files, models = output, app = applications[app_name].name, picture = CONFIG["upload_folder"] + "/" + new_name)
         else:
             return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "File extension not valid. Try again")
 
@@ -148,19 +151,6 @@ def retrieve_allowed_files(models_name_list:list, app_name:str, applications: di
         else:
             allowed_files = allowed_files.intersection(set(applications[app_name].models[i].file_format))
     return allowed_files
-
-def fake_values(models_name_list: list):
-
-    """
-    This function generates some fake values for each model in the list.
-
-    models_name_list (list): List of the models names
-    """
-    output = []
-    for i in models_name_list:
-        output.append([i, random.randint(0, 10000)])
-    return output
-
 
 def get_menu_items(selected_item:str, applications: dict):
 
@@ -239,3 +229,25 @@ def get_models_by_app(app_name: str, applications: dict):
         models[0][3] = True
 
     return models, ", ".join(list(restriction))
+
+def generate_random_names(length = 20, base = 64):
+    """
+    This function generates a random name of a given length
+
+    length (int): length of the output
+    base (int): base to be used in order to generate the random name
+
+    """
+    characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-"
+    # Upper and lower bounds control
+    if base > 64:
+        base = 64
+    elif base < 2:
+        base = 0
+    output_name = []
+
+    # Generate de name
+    for _ in range(length):
+        output_name.append(characters[random.randint(0, base-1)])
+
+    return "".join(output_name)

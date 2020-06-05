@@ -104,4 +104,4 @@ if __name__ == "__main__":
 
     # If the configuration is valid start the server
     if config():
-        app.run(port=CONFIG["port"], debug=True)
+        app.run(host= '0.0.0.0', port=CONFIG["port"])
