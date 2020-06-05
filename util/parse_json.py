@@ -80,7 +80,7 @@ def parse_application_model(application: Application):
 
         # Add the model to the application
         if validJson:
-            application.add_model(Model(data["name"].replace(" ", "-"), data["description"], data["model_info"], data["attributes"], data["file_format"]))
+            application.add_model(Model(data["name"].replace(" ", ""), data["name"], data["description"], data["model_info"], data["attributes"], data["file_format"]))
 
 def parse_config(config_path: str):
 

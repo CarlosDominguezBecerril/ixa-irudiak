@@ -1,5 +1,6 @@
 class Model:
-    def __init__(self, name, description, model_info, attributes, file_format):
+    def __init__(self, short_name, name, description, model_info, attributes, file_format):
+        self.short_name = short_name
         self.name = name
         self.description = description
         self.model_info = model_info
@@ -8,4 +9,4 @@ class Model:
     
     def __str__(self):
         attributes = ""
-        return "\tModel name: {}. Model description: {}. Model info: {}, Model attributes: {}. Accepted file format: {}".format(self.name, self.description, self.model_info, attributes, self.file_format)
+        return "\tShort name: {} Model name: {}. Model description: {}. Model info: {}, Model attributes: {}. Accepted file format: {}".format(self.shortName, self.name, self.description, self.model_info, attributes, self.file_format)

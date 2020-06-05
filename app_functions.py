@@ -226,7 +226,7 @@ def get_models_by_app(app_name: str, applications: dict):
     for key in applications[app_name].models.keys():
         # get the model and append the information
         model = applications[app_name].models[key]
-        models.append([model.name, model.description, ", ".join(model.file_format), False])
+        models.append([model.short_name, model.description, ", ".join(model.file_format), False, model.name])
 
         # Restrictions taking into account all the models (used for comparing models)
         if len(restriction) == 0:

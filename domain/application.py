@@ -14,10 +14,10 @@ class Application:
 
         content (Model): model to include
         """
-        if content.name in self.models:
+        if content.short_name in self.models:
             print("The model is already in the list")
         else:
-            self.models[content.name] = content
+            self.models[content.short_name] = content
 
     def remove_model(self, model_name: str):
         """
