@@ -12,6 +12,10 @@
 
 > pip install Pillow
 
+> pip install matplotlib
+
+> pip install scikit-learn
+
 ## Running the web server
 
 Execute app.py
@@ -58,29 +62,27 @@ def run_my_application2(model: Model, user_input: str):
     model (Model): model that is going to be used to retrieve the information.
     """
 
-    output = ""
+    output = []
     # Using try catch for not having dependencies with errors in tensorflow, pytorch ....
     try:
         # Model 'model1'
-        if model.name == "model1":
-            output = model1.run_model(user_input, model.model_info)
+        # The short_name is the name but without blanks
+        if model.short_name == "model1":
+            model_output = model1.run_model(user_input, model.model_info)
+            output.append(["Output", model_output, "text"])
         # Model 'model2'
-        elif model.name == "model2":
-            output = model2.run_model(user_input, model.model_info)
+        elif model.short_name == "model2":
+            model_output = model2.run_model(user_input, model.model_info)
+            output.append(["Output", model_output[0], "text"])
+            output.append(["Attention plot", model_output[1], "image"])
         # add as many as you have
+
         else:
-
-        # model not found (text error)
-            output = "'{}' model can't be found in the system".format(model.name)
-        # model not found (image error)
-        #   output = "../static/pictures/image_error.jpg"
-
-    except:
-
-        # model error (text error)
-        output = "Serious error found when trying to use '{}' model".format(model.name)
-        # model error (image error)
-        #   output = "../static/pictures/image_error.jpg"
+            # model not found
+            output.append(["Error in system: ",  "'{}' model can't be found in the system".format(model.name), "text"])
+        
+    except Exception as e:
+        output.append(["Error in model: ",  "Serious error found when trying to use '{}' model. Error: {}".format(model.name, e), "text"])
 
     return output
 ```
@@ -119,7 +121,10 @@ def execute_model(app_name: str, model: Model, user_input: str, app_type: str):
 
     # Application not found. type: picture
     if app_type == "image":
-        return "../static/pictures/image_error.jpg"
+        return [["Application not found:", "../static/pictures/image_error.jpg", "image"]]
+
+    # Application not found. type: text
+    return [["Application not found", "'{}' application can't be found in the system".format(app_name), "text"]]
 
 ```
 
@@ -160,49 +165,57 @@ Example:
 
 4 In the function that handle the models of the application add a new "if / elif" statement that calls to the function that predicts the output. imports of libraries may be needed.
 
+Important: each element that you add to output is written like this: [name, model_output, type]
+
+**name**: Name that is going to be displayed in the output
+**model_output**: The output that you get from the execution of the model.
+**type**: "image" or "text". In the case of "image" model_output needs to be the path to the picture and in the case of "text" model_output is a text.
+
 Code to add:
 ```
 # Model 'model2'
-elif model.name == "model2":
+# short_name is the name given to the model but without blanks
+elif model.short_name == "model2":
     # We call to our function model2.run_model() that predicts the output
-    output = model2.run_model(user_input, model.model_info)
+        model_output = model2.run_model(user_input, model.model_info)
+        output.append(["Output", model_output[0], "text"])
+        output.append(["Attention plot", model_output[1], "image"])
 ```
 Example:
 
 ```
 def run_my_application2(model: Model, user_input: str):
     """
-    This function join together all the models related with image captioning.
+    This function join together all the models related with application2.
 
     user_input (str): The input given by the user. Text or path to a file.
     model (Model): model that is going to be used to retrieve the information.
     """
 
-    output = ""
+    output = []
     # Using try catch for not having dependencies with errors in tensorflow, pytorch ....
     try:
-        # HERE WE ADD THE NEW IF / ELIF STATEMEN
+
+        # HERE WE ADD THE IF / ELIF STATEMENT
 
         # Model 'model1'
-        if model.name == "model1":
-            output = model1.run_model(user_input, model.model_info)
+        # The short_name is the name but without blanks
+        if model.short_name == "model1":
+            model_output = model1.run_model(user_input, model.model_info)
+            output.append(["Output", model_output, "text"])
         # Model 'model2'
-        elif model.name == "model2":
-            output = model2.run_model(user_input, model.model_info)
+        elif model.short_name == "model2":
+            model_output = model2.run_model(user_input, model.model_info)
+            output.append(["Output", model_output[0], "text"])
+            output.append(["Attention plot", model_output[1], "image"])
         # add as many as you have
+
         else:
-
-        # model not found (text error)
-            output = "'{}' model can't be found in the system".format(model.name)
-        # model not found (image error)
-        #   output = "../static/pictures/image_error.jpg"
-
-    except:
-
-        # model error (text error)
-        output = "Serious error found when trying to use '{}' model".format(model.name)
-        # model error (image error)
-        #   output = "../static/pictures/image_error.jpg"
+            # model not found
+            output.append(["Error in system: ",  "'{}' model can't be found in the system".format(model.name), "text"])
+        
+    except Exception as e:
+        output.append(["Error in model: ",  "Serious error found when trying to use '{}' model. Error: {}".format(model.name, e), "text"])
 
     return output
 ```
