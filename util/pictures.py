@@ -25,6 +25,11 @@ def random_pictures(n: int, pictureList: list):
     n (Int): quantity of numbers to return
     pictureList (list): picture names list
     """
+    if n >= len(pictureList):
+        return pictureList
+    elif n <= 0:
+        return []
+
     used = set()
     while len(used) < n:
         r = random.randrange(0, len(pictureList)-1)
