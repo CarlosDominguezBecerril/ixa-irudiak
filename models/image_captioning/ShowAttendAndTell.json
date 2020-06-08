@@ -1,6 +1,6 @@
 {
     "name": "Show Attend And Tell",
-    "description": "Show Attend And Tell (Google)",
+    "description": "Xu, K., Ba, J., Kiros, R., Cho, K., Courville, A., Salakhudinov, R., ... & Bengio, Y. (2015, June). Show, attend and tell: Neural image caption generation with visual attention. In International conference on machine learning (pp. 2048-2057). <a href='http://proceedings.mlr.press/v37/xuc15.pdf'> Paper </a>",
     "model_info" : {
         "tokenizer" : "./models/image_captioning/ShowAttendAndTell/tokenizer.json",
         "max_length" : 52,

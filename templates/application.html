@@ -87,7 +87,7 @@
                         <div class="formInput">
                             <h3>About the model</h3>
                             <hr>
-                            <p>{{model[1]}}</p>
+                            <p>{{model[1]|safe}}</p>
 
                             <form method="POST" action="/{{app}}/output" enctype=multipart/form-data id={{model[0]}}>
                                 <h3>Select a picture</h3>
