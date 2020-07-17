@@ -67,7 +67,7 @@ def parse_application_model(application: Application):
     application (Application): application
     """
     files = [f for f in listdir(application.models_path) if isfile(join(application.models_path, f))]
-    args = ["name", "description", "model_info", "attributes", "file_format"]
+    args = ["name", "description", "model_info", "file_format"]
     for model_path in files:
         with open(application.models_path + "/"+ model_path) as f:
             data = json.load(f)
@@ -80,7 +80,7 @@ def parse_application_model(application: Application):
 
         # Add the model to the application
         if validJson:
-            application.add_model(Model(data["name"].replace(" ", ""), data["name"], data["description"], data["model_info"], data["attributes"], data["file_format"]))
+            application.add_model(Model(data["name"].replace(" ", ""), data["name"], data["description"], data["model_info"], data["file_format"]))
 
 def parse_config(config_path: str):
 
@@ -93,8 +93,8 @@ def parse_config(config_path: str):
     with open(config_path) as f:
         data = json.load(f)
 
-    compulsory_args = ["models_path", "random_pictures_path", "upload_folder"]
-    non_compulsory_args = ["port", "number_of_pictures_to_show"]
+    compulsory_args = ["models_path", "random_pictures_path", "random_texts_path", "upload_folder"]
+    non_compulsory_args = ["port", "number_of_pictures_to_show", "number_of_texts_to_show"]
     error_arguments = ["number_of_random_pictures"]
 
     # Compulsory arguments
@@ -123,6 +123,12 @@ def parse_config(config_path: str):
             else:
                 if data[arg][-1] == "/":
                     data[arg]  = data[arg][:-1]
+        elif arg == "random_texts_path":
+            if not (data[arg].startswith("/static") or data[arg].startswith("static")):
+                raise FileNotFoundError("Argument '{}' needs to be inside 'static' folder. Actual path: {}".format(arg, data[arg]))
+            else:
+                if data[arg][-1] == "/":
+                    data[arg]  = data[arg][:-1]
 
     # Non compulsory arguments
     for arg in non_compulsory_args:
@@ -131,6 +137,8 @@ def parse_config(config_path: str):
                 data["port"] = 5000
             elif arg == "number_of_pictures_to_show":
                 data["number_of_pictures_to_show"] = 4
+            elif arg == "number_of_texts_to_show": 
+                data['number_of_texts_to_show'] = 5
 
     # Error arguments
     for arg in error_arguments:

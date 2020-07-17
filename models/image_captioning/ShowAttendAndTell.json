@@ -11,6 +11,5 @@
         "checkpoint_dir": "./models/image_captioning/ShowAttendAndTell/checkpoints/train",
         "attention_dir" : "./static/tmp"
     },
-    "attributes" : [],
     "file_format": [".jpg", ".jpeg", ".png", ".gif"]
 }

@@ -65,7 +65,6 @@ def generate_desc(model, tokenizer, photo, max_length):
     return in_text
 
 def run_model(image_path: str, model_values: dict):
-
     # To fix keras error: AttributeError: ‘_thread._local’ object has no attribute ‘value’
     tb._SYMBOLIC_SCOPE.value = True
     

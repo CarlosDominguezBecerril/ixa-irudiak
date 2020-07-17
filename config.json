@@ -2,6 +2,8 @@
     "port": 80,
     "models_path": "models/modelsConfig.json",
     "random_pictures_path": "static/randomPictures",
+    "random_texts_path": "static/randomTexts",
     "number_of_pictures_to_show": 8,
+    "number_of_texts_to_show": 5,
     "upload_folder": "static/tmp"
 }

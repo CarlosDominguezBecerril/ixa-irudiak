@@ -6,6 +6,5 @@
         "max_length": 34,
         "best_model" : "./models/image_captioning/ShowAndTell/model-ep004-loss3.166-val_loss3.642.h5"
     },
-    "attributes" : [],
     "file_format": [".jpg", ".jpeg", ".png", ".gif"]
 }
