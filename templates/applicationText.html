@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="../static/css/style.css">
+    <!-- Javascript-->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+    <script src="../static/js/javascript.js"></script>
+
+    <link rel="shortcut icon" href="../static/pictures/favicon.ico">
+
+    <title>IXA-Taldea {{title}} </title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#"> <img src="../static/pictures/ixa-logo.png" width="30" height="30"
+                class="d-inline-block align-top" alt="ixa-team logo">
+            IXA Taldea</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                {% for nav in menu %}
+                {% if nav[2] %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="application">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                {% for model in models %}
+                {% if model[3] %}
+                <li class="nav-item">
+                    <a class="nav-link active" id="{{model[0]}}-tab" data-toggle="tab" href="#{{model[0]}}" role="tab"
+                        aria-controls="{{model[0]}}" aria-selected="true">{{model[4]}}</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" id="{{model[0]}}-tab" data-toggle="tab" href="#{{model[0]}}" role="tab"
+                        aria-controls="{{model[0]}}" aria-selected="false">{{model[4]}}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+                <li class="nav-item">
+                    <a class="nav-link" id="compare-tab" data-toggle="tab" href="#compare" role="tab"
+                        aria-controls="compare" aria-selected="false">Compare</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                {% for model in models %}
+                {% if model[3] %}
+                <div class="tab-pane fade show active" id="{{model[0]}}" role="tabpanel"
+                    aria-labelledby="{{model[0]}}-tab">
+                    {% else %}
+                    <div class="tab-pane fade" id="{{model[0]}}" role="tabpanel" aria-labelledby="{{model[0]}}-tab">
+                        {% endif %}
+                        <div class="formInput">
+                            <h3>About the model</h3>
+                            <hr>
+                            <p>{{model[1]|safe}}</p>
+
+                            <form method="POST" action="/{{app}}/output" enctype=multipart/form-data id={{model[0]}}>
+                                <h3>Select a text</h3>
+                                <hr>
+                                {% for text in texts %}
+                                <div class="input-group mb-3">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="{{model[0]}}{{text[0]}}" value='{{text[0]}}' name="randomText{{model[0]}}" onClick="textSelected('{{model[0]}}');">
+                                        <label class="custom-control-label" for="{{model[0]}}{{text[0]}}">{{text[1]}}</label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                <h3>Write your own text</h3>
+                                <hr>
+                                <div class="form-group">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroup-sizing-default">&gt;</span>
+                                        </div>
+                                        <input type="text" class="form-control" aria-label="Default" name="custom-input{{model[0]}}" oninput="customText(this, '{{model[0]}}');" aria-describedby="inputGroup-sizing-default" placeholder="Your text here">
+                                    </div>
+                                </div>
+                                <h3>Upload a text</h3>
+                                <hr>
+                                <div class="form-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="{{model[0]}}File"
+                                            aria-describedby="{{model[0]}}FileD" name="userFile"
+                                            onChange="fileUploaded(this, '{{model[0]}}')" accept="{{model[2]}}">
+                                        <label class="custom-file-label" for="{{model[0]}}File">Choose file</label>
+                                        <small id="Help" class="form-text text-muted">Accepted file formats:
+                                            {{model[2]}}</small>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="model" value="{{model[0]}}">
+                                <input type="hidden" name="method" id="{{model[0]}}Method" value="non-selected">
+                                <hr>
+                                <button type="reset" class="btn btn-danger mb-2">Reset</button>
+                                <button type="submit" id="{{model[0]}}Submit" class="btn btn-primary mb-2" disabled>Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="tab-pane fade" id="compare" role="tabpanel" aria-labelledby="compare-tab">
+                        <div class="formInput"></div>
+                        <h3> Compare different models</h3>
+                        <hr>
+                        <form method="POST" action="/{{app}}/output" enctype=multipart/form-data>
+                            {% for model in models %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <input type="checkbox" aria-label="Checkbox for following text input" name="checkbox{{model[0]}}">
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" aria-label="Text input with checkbox" disabled
+                                    placeholder="{{model[4]}}">
+                            </div>
+                            {% endfor %}
+                            <h3>Select a text</h3>
+                            <hr>
+                            {% for text in texts %}
+                            <div class="input-group mb-3">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input" id="compare{{text[0]}}" value='{{text[0]}}' name="randomText" onClick="textSelected('compare');">
+                                    <label class="custom-control-label" for="compare{{text[0]}}">{{text[1]}}</label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <h3>Write your own text</h3>
+                            <hr>
+                            <div class="form-group">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroup-sizing-default">&gt;</span>
+                                    </div>
+                                    <input type="text" class="form-control" aria-label="Default" name="custom-input" oninput="customText(this, 'compare');" aria-describedby="inputGroup-sizing-default" placeholder="Your text here">
+                                </div>
+                            </div>
+                            <h3>Upload a text</h3>
+                            <hr>
+                            <div class="form-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="compareFile"
+                                        aria-describedby="compareFileFileD" name="userFile"
+                                        onChange="fileUploaded(this, 'compare')" accept="{{compare}}">
+                                    <label class="custom-file-label" for="compareFileFile">Choose file</label>
+                                    <small id="Help" class="form-text text-muted">Accepted file formats:
+                                        {{compare}}</small>
+                                </div>
+                            </div>
+                            <input type="hidden" name="method" id="compareMethod" value="non-selected">
+                            <hr>
+                            <button type="reset" class="btn btn-danger mb-2">Reset</button>
+                            <button type="submit" id="compareSubmit" class="btn btn-primary mb-2" disabled>Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <footer class="page-footer font-small">
+            <!-- Copyright -->
+            <div class="footer-copyright text-center py-3">© 2020 Copyright:
+                <a href="http://ixa.si.ehu.es/"> http://ixa.si.ehu.es/</a>
+            </div>
+            <!-- Copyright -->
+        </footer>
+        <!-- Footer -->
+</body>
+
+</html>
