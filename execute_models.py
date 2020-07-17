@@ -5,6 +5,7 @@ import random
 
 from models.image_captioning.ShowAndTell import run_model as oier
 from models.image_captioning.ShowAttendAndTell import run_model as gorka
+from models.text_to_image.sg2im import run_model as sg2im
 
 def run_all_models(models_list: list, app_name: str, applications: dict, user_input:str):
     """
@@ -20,7 +21,7 @@ def run_all_models(models_list: list, app_name: str, applications: dict, user_in
         if app_name not in applications or model not in applications[app_name].models:
             continue
         else:
-            # For each model create a list with model name, the output of executing the model and the application type
+            # For each model create a list with model name and the output of executing the model
             output.append([applications[app_name].models[model].name, execute_model(app_name, applications[app_name].models[model], user_input, applications[app_name].app_type)])
     return output
 
@@ -37,13 +38,38 @@ def execute_model(app_name: str, model: Model, user_input: str, app_type: str):
     # Image captioning application
     if app_name == "image_cap":
         return run_image_cap(model, user_input)
-
+    # Text to image application
+    elif app_name == "text_to_image":
+        return run_text_to_image(model, user_input)
     # Application not found. type: picture
     if app_type == "image":
         return [["Application not found", "../static/pictures/image_error.jpg", "image"]]
 
     # Application not found. type: text
     return [["Application not found", "'{}' application can't be found in the system".format(app_name), "text"]]
+
+def run_text_to_image(model: Model, user_input: str):
+    """
+    This function join together all the models related with image captioning.
+
+    user_input (str): The input given by the user. Text or path to a file.
+    model (Model): model that is going to be used to retrieve the information.
+    """
+
+    output = []
+    # Using try catch for not having dependencies with errors in tensorflow, pytorch ....
+    try:
+        # Model 'sg2im'
+        if model.short_name == "SceneGraphToImage":
+            model_output = sg2im.run_model(user_input, model.model_info)
+            output.append(["Output", model_output, "image"])
+        else:
+        # model not found
+            output.append(["Error in system",  "'{}' model can't be found in the system".format(model.name), "text"])
+        
+    except Exception as e:
+        output.append(["Error in model",  "Serious error found when trying to use '{}' model. Error: {}".format(model.name, e), "text"])
+    return output
 
 def run_image_cap(model: Model, user_input: str):
     """

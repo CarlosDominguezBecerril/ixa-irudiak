@@ -1,0 +1,12 @@
+{
+    "name": "Scene Graph To Image",
+    "description": "Text to Scene graph: <a href='https://github.com/vacancy/SceneGraphParser'> Github</a>. <br> Scene graph to picture: Justin Johnson, Agrim Gupta, Li Fei-Fei. <a href='https://arxiv.org/abs/1804.01622'>Paper</a>.",
+    "model_info" : {
+        "vocab":"./models/text_to_image/sg2im/vocab/vocab.json",
+        "checkpoint_dir": "./models/text_to_image/sg2im/checkpoints/text_graph_image5.pth",
+        "width": 256,
+        "height": 256,
+        "layout_dir" : "./static/tmp"
+    },
+    "file_format": [".txt"]
+}
