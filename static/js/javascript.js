@@ -13,3 +13,16 @@ function pictureSelected(model){
     button.disabled = false;
 }
 
+/* When a text is selected activate submit button and change the "Method" to "random-texts"*/
+function textSelected(model){
+    document.getElementById(model.concat("Method")).value = "random-text";
+    var button = document.getElementById(model.concat("Submit"));
+    button.disabled = false;
+}
+
+/* When a text is written activate submit button and change the "Method" to "custom-text"*/
+function customText(input_text, model){
+    document.getElementById(model.concat("Method")).value = "custom-text";
+    var button = document.getElementById(model.concat("Submit"));
+    button.disabled = false;
+}

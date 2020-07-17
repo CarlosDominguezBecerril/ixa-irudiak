@@ -1,8 +1,9 @@
 from flask import Flask, render_template, url_for, send_from_directory, request
 from domain.application import Application
 from domain.model import Model
-from util import parse_json, pictures
+from util import parse_json, pictures, texts
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 from werkzeug.utils import secure_filename
 import app_functions
 
@@ -34,9 +35,14 @@ def application(app_name:str):
     if app_name in applications:
         # Retrieve the models information and restrictions (file restrictions)
         modelsList, restriction = app_functions.get_models_by_app(app_name, applications)
-        return render_template("application.html", compare = restriction, title = applications[app_name].name, app = app_name, menu = appNames, models = modelsList, pictures = pictures.random_pictures(CONFIG["number_of_pictures_to_show"], CONFIG["random_picture_list"]))
-    else:
-       return render_template("404.html", menu = appNames), 404 
+
+        # Depending on the application type return the appropiate template
+        if applications[app_name].app_type == 'image':
+            return render_template("applicationImage.html", compare = restriction, title = applications[app_name].name, app = app_name, menu = appNames, models = modelsList, pictures = pictures.random_pictures(CONFIG["number_of_pictures_to_show"], CONFIG["random_picture_list"]))
+        elif applications[app_name].app_type == 'text':
+            return render_template("applicationText.html", compare = restriction, title = applications[app_name].name, app = app_name, menu = appNames, models = modelsList, texts = texts.random_texts(CONFIG["number_of_texts_to_show"], CONFIG["random_text_list"], CONFIG["random_texts_path"]))
+    
+    return render_template("404.html", menu = appNames), 404 
 
 @app.route('/<app_name>/output', methods=['POST'])
 def output(app_name:str):
@@ -61,6 +67,10 @@ def output(app_name:str):
     # Random picture
     elif "random-picture" == method:
         return app_functions.random_picture_input(appNames, app_name, data, applications, CONFIG)
+    elif "random-text" == method:
+        return app_functions.random_text_input(appNames, app_name, data, applications, CONFIG)
+    elif "custom-text" == method:
+        return app_functions.custom_input(appNames, app_name, data, applications, CONFIG)
 
     # Any other "method" gives an error
     return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "Unexpected error")
@@ -92,6 +102,8 @@ def config():
         # Information about random pictures
         CONFIG["random_picture_list"] = pictures.retrieve_pictures_names_in_folder(CONFIG["random_pictures_path"])
         CONFIG["number_of_random_pictures"] = len(CONFIG["random_picture_list"])
+        CONFIG["random_text_list"] = texts.retrieve_texts_names_in_folder(CONFIG['random_texts_path'])
+        CONFIG["number_of_random_texts"] = len(CONFIG["random_text_list"])
         return True
     except FileNotFoundError as err:
         print(err)

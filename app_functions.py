@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, send_from_directory, request
 from domain.application import Application
 from domain.model import Model
-from util import parse_json, pictures
+from util import parse_json, pictures, texts
 import os
 from os import listdir
 from os.path import isfile, join
@@ -65,11 +65,127 @@ def random_picture_input(appNames:list, app_name:str, data:dict, applications:di
                 # Execute the models
                 output = run_all_models(models_list, app_name, applications, CONFIG["random_pictures_path"] + "/" + data[picture_name])
                
-                return render_template("output.html", menu = appNames, title = applications[app_name].name, allowed_file = allowed_files, models = output, app = applications[app_name].name, picture = CONFIG["random_pictures_path"] + "/" + data[picture_name])
+                return render_template("outputImage.html", menu = appNames, title = applications[app_name].name, allowed_file = allowed_files, models = output, app = applications[app_name].name, picture = CONFIG["random_pictures_path"] + "/" + data[picture_name])
             else:
                 return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "The picture doesn't exist in our system")
         else:
             return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "Error while trying to retrieve the random picture")
+    return render_template("wrongOutput.html", menu = appNames, title = "Error", info= "Application name not found")
+
+
+def random_text_input(appNames:list, app_name:str, data:dict, applications:dict, CONFIG:dict):
+    """
+    Function that handles random texts
+
+    appNames (List): Menu generated.
+    app_name (str): The name of app used by the user
+    data (dict): values that the user uses in the form
+    applications (dict): Application list
+    CONFIG (dict): configuration of the server
+    """
+
+    # Check if the application exist
+    if app_name in applications:
+        text_name = ""
+        # find the key in the dictionary that contains the file of the text
+        if "model" in data:
+            if data['model'] in applications[app_name].models:
+                text_name = "randomText" + data['model']
+            else:
+                # Model doesn't exist
+                return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "The model doesn't exist")
+        else:
+            text_name = "randomText"
+
+        if text_name in data:
+            models_list = []
+            # Retrieve selected model list
+            if 'model' in data:
+                models_list.append(data['model'])
+            else:
+                for i in data:
+                    if i.startswith("checkbox"):
+                        mod = i[8:]
+                        if mod in applications[app_name].models:
+                            models_list.append(mod)
+            # No models selected
+            if len(models_list) == 0:
+                return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "You didn't select a model!. Try again")
+            # Retrieve allowed files
+            allowed_files = retrieve_allowed_files(models_list, app_name, applications)
+
+            text_in_system = False
+            for f in listdir(CONFIG["random_texts_path"] + "/"):
+                if isfile(join(CONFIG["random_texts_path"] + "/", f)) and f == data[text_name]:
+                    text_in_system = True
+
+            if text_in_system:
+                # check if correct file extension
+                if "." + data[text_name].split('.')[1] not in allowed_files:
+                    return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "File extension not valid. Try again")
+                
+                output_text = texts.read_text_file(CONFIG["random_texts_path"] + "/" + data[text_name])
+                if len(output_text) == 0:
+                    output_text = ""
+                else:
+                    output_text = output_text[0]
+                # Execute the models
+                output = run_all_models(models_list, app_name, applications, output_text)
+                return render_template("outputText.html", menu = appNames, title = applications[app_name].name, allowed_file = allowed_files, models = output, app = applications[app_name].name, text = output_text)
+            else:
+                return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "The text doesn't exist in our system")
+        else:
+            return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "Error while trying to retrieve the random text")
+    return render_template("wrongOutput.html", menu = appNames, title = "Error", info= "Application name not found")
+
+def custom_input(appNames:list, app_name:str, data:dict, applications:dict, CONFIG:dict):
+    """
+    Function that handles custom text
+
+    appNames (List): Menu generated.
+    app_name (str): The name of app used by the user
+    data (dict): values that the user uses in the form
+    applications (dict): Application list
+    CONFIG (dict): configuration of the server
+    """
+    # Check if the application exist
+    if app_name in applications:
+        input_location_key = ""
+        # find the key in the dictionary that contains the file of the text
+        if "model" in data:
+            if data['model'] in applications[app_name].models:
+                input_location_key = "custom-input" + data['model']
+            else:
+                # Model doesn't exist
+                return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "The model doesn't exist")
+        else:
+            input_location_key = "custom-input"
+
+        if input_location_key in data:
+            input_content = data[input_location_key]
+
+            models_list = []
+            # Retrieve selected model list
+            if 'model' in data:
+                models_list.append(data['model'])
+            else:
+                for i in data:
+                    if i.startswith("checkbox"):
+                        mod = i[8:]
+                        if mod in applications[app_name].models:
+                            models_list.append(mod)
+            # No models selected
+            if len(models_list) == 0:
+                return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "You didn't select a model!. Try again")
+
+            if applications[app_name].app_type == "text":
+                # Execute the models
+                output = run_all_models(models_list, app_name, applications, input_content)
+                return render_template("outputText.html", menu = appNames, title = applications[app_name].name, allowed_file = ["Custom text input"], models = output, app = applications[app_name].name, text = input_content)
+            else:
+                return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "Application type not valid")
+        else:
+            return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "Error while trying to retrieve your text")
     return render_template("wrongOutput.html", menu = appNames, title = "Error", info= "Application name not found")
 
 def user_file_input(appNames:list, app_name:str, data:dict, applications:dict, CONFIG:dict):
@@ -125,10 +241,21 @@ def user_file_input(appNames:list, app_name:str, data:dict, applications:dict, C
             new_name = generate_random_names() + extension
             os.rename(os.path.join(CONFIG["upload_folder"], filename), os.path.join(CONFIG["upload_folder"], new_name))
 
-            # Execute the models
-            output = run_all_models(models_list, app_name, applications, CONFIG["upload_folder"] + "/" + new_name)
-
-            return render_template("output.html", menu = appNames, title = applications[app_name].name, allowed_file = allowed_files, models = output, app = applications[app_name].name, picture = CONFIG["upload_folder"] + "/" + new_name)
+            if applications[app_name].app_type == "image":
+                # Execute the models
+                output = run_all_models(models_list, app_name, applications, CONFIG["upload_folder"] + "/" + new_name)
+                return render_template("outputImage.html", menu = appNames, title = applications[app_name].name, allowed_file = allowed_files, models = output, app = applications[app_name].name, picture = CONFIG["upload_folder"] + "/" + new_name)
+            elif applications[app_name].app_type == "text":
+                # Execute the models
+                output_text = texts.read_text_file(CONFIG["upload_folder"] + "/" + new_name)
+                if len(output_text) == 0:
+                    output_text = ""
+                else:
+                    output_text = output_text[0]
+                output = run_all_models(models_list, app_name, applications, output_text)
+                return render_template("outputText.html", menu = appNames, title = applications[app_name].name, allowed_file = allowed_files, models = output, app = applications[app_name].name, text = output_text)
+            else:
+                return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "Application type not valid")
         else:
             return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "File extension not valid. Try again")
 
