@@ -30,6 +30,8 @@
 
 > python -m spacy download en (To use the parser for English)
 
+> pip install imageio
+
 ## Running the web server
 
 1 Execute app.py
