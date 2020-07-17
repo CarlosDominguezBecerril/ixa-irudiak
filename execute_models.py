@@ -62,7 +62,11 @@ def run_text_to_image(model: Model, user_input: str):
         # Model 'sg2im'
         if model.short_name == "SceneGraphToImage":
             model_output = sg2im.run_model(user_input, model.model_info)
-            output.append(["Output", model_output, "image"])
+            output.append(["Output", model_output[0], "image"])
+            output.append(["Scene graph", model_output[1], "image"])
+            output.append(["Objects list", model_output[2], "text"])
+            output.append(["Relations list", model_output[3], "text"])
+            output.append(["Triples list", model_output[4], "text"])
         else:
         # model not found
             output.append(["Error in system",  "'{}' model can't be found in the system".format(model.name), "text"])

@@ -20,6 +20,7 @@ import random
 import models.text_to_image.sg2im.sng_parser as sg
 from models.text_to_image.sg2im.layout import draw_bounding_boxes_layout, boxes_to_layout
 from models.text_to_image.sg2im.model import Sg2ImModel
+from models.text_to_image.sg2im.vis import draw_scene_graph
 
 import pickle
 
@@ -60,28 +61,40 @@ def generate_graph_info(text):
     
     return objects, list(relations), triples 
     
-def predict_single(text, model, device, path, size):
+def predict_single(text, model, device, path, vocab, size):
     objs, rels, triples = generate_graph_info(text)
     objs_list = list(objs)
+    rels_list = list(rels)
+    triples_list0 = [[s[0], p, o[0]] for s, p, o in triples]
+    triples_list1 = [[s[1], p, o[1]] for s, p, o in triples]
+
     objs, triples, obj_to_img = model.encode_scene_graph(objs, rels, triples)
+
+    # Generate a random name for the output
+    random_name = generate_random_names() 
+    file_path = path + "/" + random_name + '.png'
+    file_path_graph = path + "/" + random_name + 'graph.png'
+
+    # Generate the scene graph
+    draw_scene_graph(objs_list, triples_list1, file_path_graph, orientation='V')
+
+    # Process the layout
     objs, triples, obj_to_img = to_device(objs, device), to_device(triples, device), to_device(obj_to_img, device)
     preds = model(objs, triples, obj_to_img)
-    # print("Prediction bouding boxes: ", preds, flush=True)
     
-    # Generate picture
+    # Generate layout picture
     v = [[0, 0, 0]]*len(preds)
     vecs = to_device(torch.FloatTensor(v), device)
     out = boxes_to_layout(vecs, preds, obj_to_img, size[1], size[0], pooling='sum')
-    file_path = path + "/" + generate_random_names() + '.png'
     save_image(out.data, file_path)
     
-    # Show picture
+    # Show layout picture
     IMAGENET_MEAN = [0.485, 0.456, 0.406]
     IMAGENET_STD = [0.229, 0.224, 0.225]
-    # print("Object list:", objs_list, flush=True)
+
     transforms = T.Compose([T.ToTensor(), T.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD)])
     draw_bounding_boxes_layout(transforms(Image.open(file_path).convert("RGB")), objs_list, preds.cpu().detach(), file_path, size=size)
-    return file_path
+    return file_path, file_path_graph, objs_list, rels_list, triples_list0
 
 def generate_random_names(length = 20, base = 64):
     """
@@ -106,14 +119,10 @@ def generate_random_names(length = 20, base = 64):
     return "".join(output_name)
 
 def run_model(text: str, model_values: dict):
-    print("HERE0", flush=True)
     with open(model_values['vocab'], "r") as json_file:
         vocab = json.load(json_file)
     device = get_default_device()
-    print("HERE1", flush=True)
-    print(vocab.keys, flush=True)
     model = to_device(Sg2ImModel(vocab, embedding_dim=64), device)
-    print("HERE2", flush=True)
     model.load_state_dict(torch.load(model_values['checkpoint_dir'], map_location=torch.device('cpu') ))
-    print("HERE3", flush=True)
-    return "../" + predict_single(text, model, device, model_values['layout_dir'], size = (model_values['width'], model_values['height']))
+    output = predict_single(text, model, device, model_values['layout_dir'], vocab, size = (model_values['width'], model_values['height']))
+    return ["../" + output[0], "../" + output[1], output[2], output[3], output[4]]
