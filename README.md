@@ -6,7 +6,7 @@
 
 > pip install nltk
 
-> pip install Keras
+> pip install Keras==2.3.1
 
 > pip install tensorflow
 
@@ -144,8 +144,6 @@ def execute_model(app_name: str, model: Model, user_input: str, app_type: str):
 
 **model_info**: Here you add the information you may need in order to use your model.
 
-**attributes**: Attributes of the model than can be modified.
-
 **file_format**: Supported file formats
 
 Example:
@@ -158,7 +156,6 @@ Example:
         "max_length": 34,
         "best_model" : "./models/myapplication/model.h5"
     },
-    "attributes" : [],
     "file_format": [".jpg", ".jpeg", ".png"]
 }
 ```
@@ -226,8 +223,6 @@ def run_my_application2(model: Model, user_input: str):
 
 Additional information:
 
-**Attributes supported by "attributes"**: None.
-
 **Formats accepted by "file_format"**: The ones supported by HTML5
 
 ## Configuration file
@@ -240,6 +235,8 @@ File used to configure the application. The default name is "config.json" and it
 
 **random_pictures_path**: path where the random picture are located (always starting with "/static")
 
+**random_texts_path**: path where the random texts are located (always starting with "/static")
+
 **upload_folder**: path where the pictures sent by the users are going to be uploaded (always starting with "/static")
 
 *Non compulsory arguments:*
@@ -248,6 +245,7 @@ File used to configure the application. The default name is "config.json" and it
 
 **number_of_pictures_to_show**: Number of random pictures that are showed in each application
 
+**number_of_texts_to_show**: Number of random texts that are showed in each application
 
 Example
 ```
@@ -255,7 +253,9 @@ Example
     "port": 80,
     "models_path": "models/modelsConfig.json",
     "random_pictures_path": "static/randomPictures",
+    "random_texts_path": "static/randomTexts",
     "number_of_pictures_to_show": 8,
+    "number_of_texts_to_show": 5,
     "upload_folder": "static/tmp"
 }
 ```
