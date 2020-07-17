@@ -32,7 +32,7 @@ def random_pictures(n: int, pictureList: list):
 
     used = set()
     while len(used) < n:
-        r = random.randrange(0, len(pictureList)-1)
+        r = random.randrange(0, len(pictureList))
         # If the picture is not in the list add it
         if pictureList[r] not in used:
             used.add(pictureList[r])
