@@ -140,7 +140,7 @@ def random_text_input(appNames:list, app_name:str, data:dict, applications:dict,
 
 def custom_input(appNames:list, app_name:str, data:dict, applications:dict, CONFIG:dict):
     """
-    Function that handles custom text
+    Function that handles custom input
 
     appNames (List): Menu generated.
     app_name (str): The name of app used by the user
