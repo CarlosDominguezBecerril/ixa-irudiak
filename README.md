@@ -16,6 +16,20 @@
 
 > pip install scikit-learn
 
+> pip install numpy
+
+> pip install torch
+
+> pip install torchvision
+
+> pip install torchtext
+
+> pip install tabulate
+
+> pip install spacy
+
+> python -m spacy download en (To use the parser for English)
+
 ## Running the web server
 
 1 Execute app.py
