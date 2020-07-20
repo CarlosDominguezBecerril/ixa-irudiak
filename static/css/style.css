@@ -10,11 +10,13 @@
     margin-top: 1%;
 }
 
+/* This is the best size for the random pictures. The only problem is when the display is small the results are not really responsive*/
 .randomPicture{
     width: 260px;
     height: 260px;
 }
 
+/* The next three slices of code are used to show the "click" picture when you select a random picture*/
 .labelRandom:before {
     /*content: url("https://cdn1.iconfinder.com/data/icons/windows8_icons_iconpharm/26/unchecked_checkbox.png");*/
     position: absolute;
