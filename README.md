@@ -24,6 +24,8 @@ Results
 
 > pip install nltk
 
+> pip install scipy==1.4.1
+
 > pip install Keras==2.3.1
 
 > pip install tensorflow
@@ -50,9 +52,15 @@ Results
 
 > pip install imageio
 
+In order to ease the installation you can just:
+
+> pip install -r requirements.txt
+
+> python -m spacy download en
+
 ## Running the web server
 
-1 Execute app.py
+1 Execute app.py (you may need root permissions)
 
 2 Open your web browser and search for "localhost:port", by default "localhost:80" or simply "localhost". The port can be changed in config.json.
 
