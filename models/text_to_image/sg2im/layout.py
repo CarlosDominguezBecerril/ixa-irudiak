@@ -17,6 +17,8 @@ from torchvision.utils import make_grid
 from PIL import Image
 
 # draw graphs
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 

@@ -6,6 +6,8 @@ import tensorflow as tf
 
 # You'll generate plots of attention in order to see which parts of an image
 # our model focuses on during captioning
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 # Scikit-learn includes many helpful utilities
