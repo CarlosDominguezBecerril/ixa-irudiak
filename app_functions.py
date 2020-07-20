@@ -125,10 +125,6 @@ def random_text_input(appNames:list, app_name:str, data:dict, applications:dict,
                     return render_template("wrongOutput.html", menu = appNames, title = applications[app_name].name, info= "File extension not valid. Try again")
                 
                 output_text = texts.read_text_file(CONFIG["random_texts_path"] + "/" + data[text_name])
-                if len(output_text) == 0:
-                    output_text = ""
-                else:
-                    output_text = output_text[0]
                 # Execute the models
                 output = run_all_models(models_list, app_name, applications, output_text)
                 return render_template("outputText.html", menu = appNames, title = applications[app_name].name, allowed_file = allowed_files, models = output, app = applications[app_name].name, text = output_text)
@@ -248,10 +244,6 @@ def user_file_input(appNames:list, app_name:str, data:dict, applications:dict, C
             elif applications[app_name].app_type == "text":
                 # Execute the models
                 output_text = texts.read_text_file(CONFIG["upload_folder"] + "/" + new_name)
-                if len(output_text) == 0:
-                    output_text = ""
-                else:
-                    output_text = output_text[0]
                 output = run_all_models(models_list, app_name, applications, output_text)
                 return render_template("outputText.html", menu = appNames, title = applications[app_name].name, allowed_file = allowed_files, models = output, app = applications[app_name].name, text = output_text)
             else:

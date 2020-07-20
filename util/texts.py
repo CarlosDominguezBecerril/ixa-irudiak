@@ -24,7 +24,7 @@ def read_text_file(path: str):
     path (str): path where the file is located 
     """
     with open(path, 'r') as file:
-        output = file.readlines()
+        output = "\n".join(file.readlines())
 
     return output
     
@@ -45,7 +45,7 @@ def random_texts(n: int, textsList: list, path:str):
             if len(tmp) == 0:
                 output.append([textsList[i], ""])
             else:
-                output.append([textsList[i], tmp[0]])
+                output.append([textsList[i], tmp])
         return output
     elif n <= 0:
         return []
@@ -60,7 +60,7 @@ def random_texts(n: int, textsList: list, path:str):
             if len(tmp) == 0:
                 output.append([textsList[r], ""])
             else:
-                output.append([textsList[r], tmp[0]])
+                output.append([textsList[r], tmp])
     return output
 
 
