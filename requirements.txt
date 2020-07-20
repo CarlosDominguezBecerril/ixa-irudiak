@@ -1,0 +1,15 @@
+flask
+nltk
+scipy==1.4.1
+Keras==2.3.1
+tensorflow
+Pillow
+matplotlib
+scikit-learn
+numpy
+torch
+torchvision
+torchtext
+tabulate
+spacy
+imageio
