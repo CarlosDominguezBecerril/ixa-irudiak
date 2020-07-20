@@ -1,5 +1,23 @@
 # ixa-irudiak
 
+## Pictures
+
+Homepage
+
+![alt text](githubPictures/homepage.png "Homepage")
+
+Application overview
+
+![alt text](githubPictures/imageCaptioning.png "Application overview")
+
+Compare models of an application
+
+![alt text](githubPictures/modelCompare.png "Compare models of an application")
+
+Results
+
+![alt text](githubPictures/results.png "Results")
+
 ## Libraries used
 
 > pip install flask
