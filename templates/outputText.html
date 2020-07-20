@@ -29,7 +29,9 @@
 </head>
 
 <body>
+    <!-- MENU START -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <!-- Logo -->
         <a class="navbar-brand" href="#"> <img src="../static/pictures/ixa-logo.png" width="30" height="30"
                 class="d-inline-block align-top" alt="ixa-team logo">
             IXA Taldea</a>
@@ -37,59 +39,67 @@
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <!-- Menu items -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 {% for nav in menu %}
-                {% if nav[2] %}
-                <li class="nav-item active">
-                    <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
-                </li>
-                {% endif %}
+                <!-- Active item (There is only one)-->
+                    {% if nav[2] %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
+                        </li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         </div>
     </nav>
+    <!-- MENU END -->
 
+    <!-- CONTENT START -->
     <div class="container">
+        <!-- Show input information-->
         <div class="application">
-            <h3> Input </h3>
+            <h3>Input </h3>
             <hr>
             <h5>Application: {{app}}</h5>
             <h5>Models used: <br> {% for model in models %} <h6>&nbsp;&nbsp;&nbsp;&nbsp;{{model[0]}}</h6> {% if not loop.last %}{% endif %}{% endfor%}</h5>
             <h5>Allowed files: {% for allow in allowed_file %} {{allow}} {% endfor %}</h5>
             <h5>Text: {{text}}</h5>
         </div>
+        <!-- Show output information-->
         <div class="application">
             <h3>Output</h3>
             <hr>
             {% for model in models %}
-            <h5>Model name: {{model[0]}}</h5>
-
-            {% for output in model[1] %}
-                {% if output[2] == "image" %}
-                    <h5>{{output[0]}}</h5>
-                    <img src="{{output[1]}}" alt="your picture" class="img-thumbnail" style="width: 50%; height: 50%;">
-                {% else %}
-                    <h5>{{output[0]}}: {{output[1]}}</h5>
-                {% endif %}
-            {% endfor %}
-            <hr>
+                <h5>Model name: {{model[0]}}</h5>
+                {% for output in model[1] %}
+                    <!-- Two cases: output is image or text-->
+                    {% if output[2] == "image" %}
+                        <h5>{{output[0]}}</h5>
+                        <img src="{{output[1]}}" alt="your picture" class="img-thumbnail" style="width: 50%; height: 50%;">
+                    {% else %}
+                        <h5>{{output[0]}}: {{output[1]}}</h5>
+                    {% endif %}
+                {% endfor %}
+                <hr>
             {% endfor%}
         </div>
     </div>
-    <!-- Footer -->
+    <!-- CONTENT END -->
+    
+    <!-- FOOTER START-->
     <footer class="page-footer font-small">
-        <!-- Copyright -->
+        <!-- COPYRIGHT START -->
         <div class="footer-copyright text-center py-3">© 2020 Copyright:
             <a href="http://ixa.si.ehu.es/"> http://ixa.si.ehu.es/</a>
         </div>
-        <!-- Copyright -->
+        <!-- COPYRIGHT END -->
     </footer>
-    <!-- Footer -->
+    <!-- FOOTER END -->
 </body>
 
 </html>

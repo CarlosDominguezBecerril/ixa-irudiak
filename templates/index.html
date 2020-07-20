@@ -29,6 +29,7 @@
 </head>
 
 <body>
+    <!-- MENU START -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <a class="navbar-brand" href="#"> <img src="../static/pictures/ixa-logo.png" width="30" height="30"
                 class="d-inline-block align-top" alt="ixa-team logo">
@@ -37,57 +38,65 @@
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <!-- Menu items -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 {% for nav in menu %}
-                {% if nav[2] %}
-                <li class="nav-item active">
-                    <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
-                </li>
-                {% endif %}
+                    <!-- Active item (There is only one)-->
+                    {% if nav[2] %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
+                        </li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         </div>
     </nav>
+    <!-- MENU END -->
 
+    <!-- CONTENT START -->
     <div class="container">
         <div class="application">
+            <!-- Show jumbotron with general information-->
             <div class="jumbotron jumbotron-fluid">
                 <div class="container">
                     <h1 class="display-4">Ixa Taldea</h1>
                     <p class="lead">Computer vision related machine learning applications.</p>
                 </div>
             </div>
+            <!-- For each app create a new deck-->
             {% for apps in applications %}
             <div class="cardDeck">
                 <div class="card-deck">
                     {% for app in apps %}
-                    <div class="card" style="width: 18rem;">
-                        <div class="card-body">
-                            <h5 class="card-title">{{app[0]}}</h5>
-                            <p class="card-text">{{app[2]}}</p>
-                            <a href="/{{app[1]}}" class="btn btn-primary">Check it now!</a>
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{app[0]}}</h5>
+                                <p class="card-text">{{app[2]}}</p>
+                                <a href="/{{app[1]}}" class="btn btn-primary">Check it now!</a>
+                            </div>
                         </div>
-                    </div>
                     {% endfor %}
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
-    <!-- Footer -->
+    <!-- CONTENT END -->
+    
+    <!-- FOOTER START-->
     <footer class="page-footer font-small">
-        <!-- Copyright -->
+        <!-- COPYRIGHT START -->
         <div class="footer-copyright text-center py-3">© 2020 Copyright:
             <a href="http://ixa.si.ehu.es/"> http://ixa.si.ehu.es/</a>
         </div>
-        <!-- Copyright -->
+        <!-- COPYRIGHT END -->
     </footer>
-    <!-- Footer -->
+    <!-- FOOTER END -->
 </body>
 
 </html>

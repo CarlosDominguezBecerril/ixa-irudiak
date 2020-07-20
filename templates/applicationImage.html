@@ -30,7 +30,9 @@
 </head>
 
 <body>
+    <!-- MENU START -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <!-- Logo -->
         <a class="navbar-brand" href="#"> <img src="../static/pictures/ixa-logo.png" width="30" height="30"
                 class="d-inline-block align-top" alt="ixa-team logo">
             IXA Taldea</a>
@@ -38,97 +40,111 @@
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <!-- Menu items -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 {% for nav in menu %}
-                {% if nav[2] %}
-                <li class="nav-item active">
-                    <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
-                </li>
-                {% endif %}
+                    <!-- Active item (there is only one)-->
+                    {% if nav[2] %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/{{nav[0]}}">{{nav[1]}}</a>
+                        </li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         </div>
     </nav>
-
+    <!-- MENU END -->
+    <!-- CONTENT START -->
     <div class="container">
         <div class="application">
+            <!-- First we generate the models navigation bar-->
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 {% for model in models %}
-                {% if model[3] %}
-                <li class="nav-item">
-                    <a class="nav-link active" id="{{model[0]}}-tab" data-toggle="tab" href="#{{model[0]}}" role="tab"
-                        aria-controls="{{model[0]}}" aria-selected="true">{{model[4]}}</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" id="{{model[0]}}-tab" data-toggle="tab" href="#{{model[0]}}" role="tab"
-                        aria-controls="{{model[0]}}" aria-selected="false">{{model[4]}}</a>
-                </li>
-                {% endif %}
+                    <!-- active tab (there is only one)-->
+                    {% if model[3] %}
+                        <li class="nav-item">
+                            <a class="nav-link active" id="{{model[0]}}-tab" data-toggle="tab" href="#{{model[0]}}" role="tab"
+                                aria-controls="{{model[0]}}" aria-selected="true">{{model[4]}}</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" id="{{model[0]}}-tab" data-toggle="tab" href="#{{model[0]}}" role="tab"
+                                aria-controls="{{model[0]}}" aria-selected="false">{{model[4]}}</a>
+                        </li>
+                    {% endif %}
                 {% endfor %}
                 <li class="nav-item">
                     <a class="nav-link" id="compare-tab" data-toggle="tab" href="#compare" role="tab"
                         aria-controls="compare" aria-selected="false">Compare</a>
                 </li>
             </ul>
+
+            <!-- For each model create a new tab-->
             <div class="tab-content">
                 {% for model in models %}
-                {% if model[3] %}
-                <div class="tab-pane fade show active" id="{{model[0]}}" role="tabpanel"
-                    aria-labelledby="{{model[0]}}-tab">
+                    <!-- Activate the tab of one of the models-->
+                    {% if model[3] %}
+                        <div class="tab-pane fade show active" id="{{model[0]}}" role="tabpanel"
+                            aria-labelledby="{{model[0]}}-tab">
                     {% else %}
-                    <div class="tab-pane fade" id="{{model[0]}}" role="tabpanel" aria-labelledby="{{model[0]}}-tab">
-                        {% endif %}
-                        <div class="formInput">
-                            <h3>About the model</h3>
-                            <hr>
-                            <p>{{model[1]|safe}}</p>
-
-                            <form method="POST" action="/{{app}}/output" enctype=multipart/form-data id={{model[0]}}>
-                                <h3>Select a picture</h3>
+                        <div class="tab-pane fade" id="{{model[0]}}" role="tabpanel" aria-labelledby="{{model[0]}}-tab">
+                    {% endif %}
+                            <div class="formInput">
+                                <!-- Description of the model-->
+                                <h3>About the model</h3>
                                 <hr>
-                                <div class="row">
-                                    {% for pic in pictures %}
-                                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
-                                        <input type="radio" id="{{model[0]}}{{pic}}" name="randomPicture{{model[0]}}" value="{{pic}}" onClick="pictureSelected('{{model[0]}}');">
-                                        <label for="{{model[0]}}{{pic}}" class="labelRandom"><img
-                                                src="../static/randomPictures/{{pic}}"
-                                                class="img-fluid img-thumbnail randomPicture"></label>
+                                <p>{{model[1]|safe}}</p>
+                                
+                                <!-- Generate the form for each model-->
+                                <form method="POST" action="/{{app}}/output" enctype=multipart/form-data id={{model[0]}}>
+                                    <h3>Select a picture</h3>
+                                    <hr>
+                                    <div class="row">
+                                        <!--Show random pictures-->
+                                        {% for pic in pictures %}
+                                            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                                                <input type="radio" id="{{model[0]}}{{pic}}" name="randomPicture{{model[0]}}" value="{{pic}}" onClick="pictureSelected('{{model[0]}}');">
+                                                <label for="{{model[0]}}{{pic}}" class="labelRandom"><img
+                                                        src="../static/randomPictures/{{pic}}"
+                                                        class="img-fluid img-thumbnail randomPicture"></label>
+                                            </div>
+                                        {% endfor %}
                                     </div>
-                                    {% endfor %}
-                                </div>
-                                <h3>Or upload a picture</h3>
-                                <hr>
-                                <div class="form-group">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="{{model[0]}}File"
-                                            aria-describedby="{{model[0]}}FileD" name="userFile"
-                                            onChange="fileUploaded(this, '{{model[0]}}')" accept="{{model[2]}}">
-                                        <label class="custom-file-label" for="{{model[0]}}File">Choose file</label>
-                                        <small id="Help" class="form-text text-muted">Accepted file formats:
-                                            {{model[2]}}</small>
+                                    <!-- Pictures uploaded by the user-->
+                                    <h3>Or upload a picture</h3>
+                                    <hr>
+                                    <div class="form-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="{{model[0]}}File"
+                                                aria-describedby="{{model[0]}}FileD" name="userFile"
+                                                onChange="fileUploaded(this, '{{model[0]}}')" accept="{{model[2]}}">
+                                            <label class="custom-file-label" for="{{model[0]}}File">Choose file</label>
+                                            <small id="Help" class="form-text text-muted">Accepted file formats:
+                                                {{model[2]}}</small>
+                                        </div>
                                     </div>
-                                </div>
-                                <input type="hidden" name="model" value="{{model[0]}}">
-                                <input type="hidden" name="method" id="{{model[0]}}Method" value="non-selected">
-                                <hr>
-                                <button type="reset" class="btn btn-danger mb-2">Reset</button>
-                                <button type="submit" id="{{model[0]}}Submit" class="btn btn-primary mb-2" disabled>Submit</button>
-                            </form>
+                                    <input type="hidden" name="model" value="{{model[0]}}">
+                                    <input type="hidden" name="method" id="{{model[0]}}Method" value="non-selected">
+                                    <hr>
+                                    <button type="reset" class="btn btn-danger mb-2">Reset</button>
+                                    <button type="submit" id="{{model[0]}}Submit" class="btn btn-primary mb-2" disabled>Submit</button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                    {% endfor %}
-                    <div class="tab-pane fade" id="compare" role="tabpanel" aria-labelledby="compare-tab">
-                        <div class="formInput"></div>
-                        <h3> Compare different models</h3>
-                        <hr>
-                        <form method="POST" action="/{{app}}/output" enctype=multipart/form-data>
-                            {% for model in models %}
+                {% endfor %}
+                <!-- Now we show the compare model tab-->
+                <div class="tab-pane fade" id="compare" role="tabpanel" aria-labelledby="compare-tab">
+                    <div class="formInput"></div>
+                    <h3> Compare different models</h3>
+                    <hr>
+                    <form method="POST" action="/{{app}}/output" enctype=multipart/form-data>
+                        <!-- Show the different models you can choose-->
+                        {% for model in models %}
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">
@@ -138,49 +154,52 @@
                                 <input type="text" class="form-control" aria-label="Text input with checkbox" disabled
                                     placeholder="{{model[4]}}">
                             </div>
-                            {% endfor %}
-                            <h3>Select a picture</h3>
-                            <hr>
-                            <div class="row">
-                                {% for pic in pictures %}
+                        {% endfor %}
+                        <!--Show random pictures-->
+                        <h3>Select a picture</h3>
+                        <hr>
+                        <div class="row">
+                            {% for pic in pictures %}
                                 <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
                                     <input type="radio" id="compare{{pic}}" name="randomPicture" value="{{pic}}" onClick="pictureSelected('compare');">
                                     <label for="compare{{pic}}" class="labelRandom"><img
                                             src="../static/randomPictures/{{pic}}"
                                             class="img-fluid img-thumbnail randomPicture"></label>
                                 </div>
-                                {% endfor %}
-                            </div>
-                            <h3>Or upload a picture</h3>
-                            <hr>
-                            <div class="form-group">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="compareFile"
+                            {% endfor %}
+                        </div>
+                        <!-- Pictures uploaded by the user-->
+                        <h3>Or upload a picture</h3>
+                        <hr>
+                        <div class="form-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="compareFile"
                                         aria-describedby="compareFileFileD" name="userFile"
                                         onChange="fileUploaded(this, 'compare')" accept="{{compare}}">
-                                    <label class="custom-file-label" for="compareFileFile">Choose file</label>
-                                    <small id="Help" class="form-text text-muted">Accepted file formats:
+                                <label class="custom-file-label" for="compareFileFile">Choose file</label>
+                                <small id="Help" class="form-text text-muted">Accepted file formats:
                                         {{compare}}</small>
-                                </div>
                             </div>
-                            <input type="hidden" name="method" id="compareMethod" value="non-selected">
-                            <hr>
-                            <button type="reset" class="btn btn-danger mb-2">Reset</button>
-                            <button type="submit" id="compareSubmit" class="btn btn-primary mb-2" disabled>Submit</button>
-                        </form>
-                    </div>
+                        </div>
+                        <input type="hidden" name="method" id="compareMethod" value="non-selected">
+                        <hr>
+                        <button type="reset" class="btn btn-danger mb-2">Reset</button>
+                        <button type="submit" id="compareSubmit" class="btn btn-primary mb-2" disabled>Submit</button>
+                    </form>
                 </div>
             </div>
         </div>
-        <!-- Footer -->
-        <footer class="page-footer font-small">
-            <!-- Copyright -->
-            <div class="footer-copyright text-center py-3">© 2020 Copyright:
-                <a href="http://ixa.si.ehu.es/"> http://ixa.si.ehu.es/</a>
-            </div>
-            <!-- Copyright -->
-        </footer>
-        <!-- Footer -->
+    </div>
+    <!-- CONTENT END -->
+    <!-- FOOTER START -->
+    <footer class="page-footer font-small">
+        <!-- COPYRIGHT START -->
+        <div class="footer-copyright text-center py-3">© 2020 Copyright:
+            <a href="http://ixa.si.ehu.es/"> http://ixa.si.ehu.es/</a>
+        </div>
+        <!-- COPYRIGHT END -->
+    </footer>
+    <!-- FOOTER END -->
 </body>
 
 </html>
