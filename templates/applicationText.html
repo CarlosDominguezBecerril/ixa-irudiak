@@ -103,7 +103,7 @@
                                 <form method="POST" action="/{{app}}/output" enctype=multipart/form-data id={{model[0]}}>
                                     <h3>Select a text</h3>
                                     <hr>
-                                    <!--Show random pictures-->
+                                    <!--Show random texts-->
                                     {% for text in texts %}
                                         <div class="input-group mb-3">
                                             <div class="custom-control custom-radio">
@@ -139,7 +139,7 @@
                                     <input type="hidden" name="model" value="{{model[0]}}">
                                     <input type="hidden" name="method" id="{{model[0]}}Method" value="non-selected">
                                     <hr>
-                                    <button type="reset" class="btn btn-danger mb-2">Reset</button>
+                                    <button type="reset" onClick="resetButton('{{model[0]}}');" class="btn btn-danger mb-2">Reset</button>
                                     <button type="submit" id="{{model[0]}}Submit" class="btn btn-primary mb-2" disabled>Submit</button>
                                 </form>
                             </div>
@@ -163,7 +163,7 @@
                                     placeholder="{{model[4]}}">
                             </div>
                         {% endfor %}
-                        <!--Show random pictures-->
+                        <!--Show random texts-->
                         <h3>Select a text</h3>
                         <hr>
                         {% for text in texts %}
@@ -200,7 +200,7 @@
                         </div>
                         <input type="hidden" name="method" id="compareMethod" value="non-selected">
                         <hr>
-                        <button type="reset" class="btn btn-danger mb-2">Reset</button>
+                        <button type="reset" onClick="resetButton('compare');" class="btn btn-danger mb-2">Reset</button>
                         <button type="submit" id="compareSubmit" class="btn btn-primary mb-2" disabled>Submit</button>
                     </form>
                 </div>

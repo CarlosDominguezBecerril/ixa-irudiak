@@ -26,3 +26,10 @@ function customText(input_text, model){
     var button = document.getElementById(model.concat("Submit"));
     button.disabled = false;
 }
+
+/* When clicking the reset button deactivate the submit bottom and change the value to non-selected*/
+function resetButton(model){
+    document.getElementById(model.concat("Method")).value = "non-selected";
+    var button = document.getElementById(model.concat("Submit"));
+    button.disabled = true;
+}
