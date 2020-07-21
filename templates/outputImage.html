@@ -82,17 +82,18 @@
                     <!-- Two cases: output is image or text-->
                     {% if output[2] == "image" %}
                         <h5>{{output[0]}}</h5>
-                        <img src="{{output[1]}}" alt="your picture" class="img-thumbnail">
+                        <img  src="{{output[1]}}" alt="{{output[0]}}" class="img-thumbnail" width="50%" height="50%">
                     {% else %}
-                        <h5>{{output[0]}}: {{output[1]}}</h5>
+                        <h5>{{output[0]}}:</h5>
+                        <h6>{{output[1]}}</h6>
                     {% endif %}
+                    <hr>
                 {% endfor %}
-                <hr>
             {% endfor %}
         </div>
     </div>
     <!-- CONTENT END -->
-    
+
     <!-- FOOTER START-->
     <footer class="page-footer font-small">
         <!-- COPYRIGHT START -->
