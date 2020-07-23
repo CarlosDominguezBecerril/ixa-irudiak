@@ -74,20 +74,58 @@
         <div class="application">
             <h3>Output</h3>
             <hr>
-            {% for model in models %}
-                <h5>Model name: {{model[0]}}</h5>
-                {% for output in model[1] %}
-                    <!-- Two cases: output is image or text-->
-                    {% if output[2] == "image" %}
-                        <h5>{{output[0]}}</h5>
-                        <img src="{{output[1]}}" alt="{{output[0]}}" class="img-thumbnail" style="width: 50%; height: 50%;">
-                    {% else %}
-                        <h5>{{output[0]}}:</h5>
-                        <h6>{{output[1]}}</h6>
-                    {% endif %}
+            <div id="faq" role="tablist" aria-multiselectable="true">
+                {% for model in models %}
+                    <!-- Generate the collapse card for each model -->
+                    <div class="card">
+                        <div class="card-header" role="tab" id="collapse{{loop.index}}">
+                            <h5 class="card-title" style="margin-top: 1%;">
+                                <a data-toggle="collapse" data-parent="#faq" href="#collapseContent{{loop.index}}" aria-expanded="true" aria-controls="collapseContent{{loop.index}}">{{model[0]}}</a>
+                            </h5>
+                        </div>
+                        <!-- Activate the collapse on if first card-->
+                        {% if loop.index == 1 %}
+                            <div id="collapseContent{{loop.index}}" class="collapse show" role="tabcard" aria-labelledby="collapse{{loop.index}}">
+                        {% else %}
+                            <div id="collapseContent{{loop.index}}" class="collapse" role="tabcard" aria-labelledby="collapse{{loop.index}}">
+                        {% endif %}
+                                <!-- Add the content -->
+                                <div class="card-body">
+                                    <div id="faq" role="tablist" aria-multiselectable="true">
+                                        {% for output in model[1] %}
+                                            <!-- Generate the collapse card for each model output-->
+                                            <div class="card">
+                                                <div class="card-header" role="tab" id="collapseInside{{model[0] | replace(' ','')}}{{loop.index}}">
+                                                    <h5 class="card-title" style="margin-top: 1%;">
+                                                        <a data-toggle="collapse" data-parent="#faq" href="#collapseInsideContent{{model[0] | replace(' ','')}}{{loop.index}}" aria-expanded="true" aria-controls="collapseInsideContent{{model[0] | replace(' ','')}}{{loop.index}}">{{output[0]}}</a>
+                                                    </h5>
+                                                </div>
+                                                <!-- Activate the collapse on if first card-->
+                                                {% if loop.index == 1 %}
+                                                    <div id="collapseInsideContent{{model[0] | replace(' ','')}}{{loop.index}}" class="collapse show" role="tabcard" aria-labelledby="collapseInside{{model[0] | replace(' ','')}}{{loop.index}}">
+                                                {% else %}
+                                                    <div id="collapseInsideContent{{model[0] | replace(' ','')}}{{loop.index}}" class="collapse" role="tabcard" aria-labelledby="collapseInside{{model[0] | replace(' ','')}}{{loop.index}}">
+                                                {% endif %}
+                                                        <!-- Add the content -->
+                                                        <div class="card-body">
+                                                            {% if output[2] == "image" %}
+                                                                <img  src="{{output[1]}}" alt="{{output[0]}}" class="img-thumbnail" width="50%" height="50%">
+                                                            {% else %}
+                                                                <h5>{{output[0]}}:</h5>
+                                                                <h6>{{output[1]}}</h6>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                            <hr>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
                     <hr>
                 {% endfor %}
-            {% endfor%}
+            </div>
         </div>
     </div>
     <!-- CONTENT END -->
