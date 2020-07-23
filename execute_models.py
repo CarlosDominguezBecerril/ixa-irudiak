@@ -5,7 +5,7 @@ import random
 
 from models.image_captioning.ShowAndTell import run_model as oier
 from models.image_captioning.ShowAttendAndTell import run_model as gorka
-from models.text_to_image.sg2im import run_model as sg2im
+from models.text_to_image.text2bb import run_model as text2bb
 
 def run_all_models(models_list: list, app_name: str, applications: dict, user_input:str):
     """
@@ -60,8 +60,22 @@ def run_text_to_image(model: Model, user_input: str):
     # Using try catch for not having dependencies with errors in tensorflow, pytorch ....
     try:
         # Model 'sg2im'
-        if model.short_name == "SceneGraphToImage":
-            model_output = sg2im.run_model(user_input, model.model_info)
+        if model.short_name == "TextToBoundingBoxV1":
+            model_output = text2bb.run_model(user_input, model.model_info)
+            output.append(["Output", model_output[0], "image"])
+            output.append(["Scene graph", model_output[1], "image"])
+            output.append(["Objects list", model_output[2], "text"])
+            output.append(["Relations list", model_output[3], "text"])
+            output.append(["Triples list", model_output[4], "text"])
+        elif model.short_name == "TextToBoundingBoxV2":
+            model_output = text2bb.run_model(user_input, model.model_info)
+            output.append(["Output", model_output[0], "image"])
+            output.append(["Scene graph", model_output[1], "image"])
+            output.append(["Objects list", model_output[2], "text"])
+            output.append(["Relations list", model_output[3], "text"])
+            output.append(["Triples list", model_output[4], "text"])
+        elif model.short_name == "TextToBoundingBoxV3":
+            model_output = text2bb.run_model(user_input, model.model_info)
             output.append(["Output", model_output[0], "image"])
             output.append(["Scene graph", model_output[1], "image"])
             output.append(["Objects list", model_output[2], "text"])
