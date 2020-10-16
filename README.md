@@ -80,6 +80,8 @@ In order to ease the installation you can just:
 
 **type**: Application type. Valid values: "image" and "text".
 
+**show**: Optional. Either to show the application or not. Valid values: true | false.
+
 Example:
 ```
 {   
@@ -87,7 +89,8 @@ Example:
     "name": "my application",
     "description": "My application description",
     "path": "./models/myapplication",
-    "type: "text"
+    "type": "text",
+    "show": true
 }
 ```
 
@@ -112,11 +115,13 @@ def run_my_application2(model: Model, user_input: str):
         # Model 'model1'
         # The short_name is the name but without blanks
         if model.short_name == "model1":
-            model_output = model1.run_model(user_input, model.model_info)
+            with Pool(1) as p:
+                model_output = p.apply(model1.run_model, (user_input, model.model_info))
             output.append(["Output", model_output, "text"])
         # Model 'model2'
         elif model.short_name == "model2":
-            model_output = model2.run_model(user_input, model.model_info)
+            with Pool(1) as p:
+                model_output = p.apply(model2.run_model, (user_input, model.model_info))
             output.append(["Output", model_output[0], "text"])
             output.append(["Attention plot", model_output[1], "image"])
         # add as many as you have
@@ -218,7 +223,8 @@ Code to add:
 # short_name is the name given to the model but without blanks
 elif model.short_name == "model2":
     # We call to our function model2.run_model() that predicts the output
-        model_output = model2.run_model(user_input, model.model_info)
+        with Pool(1) as p:
+            model_output = p.apply(model2.run_model, (user_input, model.model_info))
         output.append(["Output", model_output[0], "text"])
         output.append(["Attention plot", model_output[1], "image"])
 ```
@@ -242,11 +248,13 @@ def run_my_application2(model: Model, user_input: str):
         # Model 'model1'
         # The short_name is the name but without blanks
         if model.short_name == "model1":
-            model_output = model1.run_model(user_input, model.model_info)
+            with Pool(1) as p:
+                model_output = p.apply(model1.run_model, (user_input, model.model_info))
             output.append(["Output", model_output, "text"])
         # Model 'model2'
         elif model.short_name == "model2":
-            model_output = model2.run_model(user_input, model.model_info)
+            with Pool(1) as p:
+                model_output = p.apply(model2.run_model, (user_input, model.model_info))
             output.append(["Output", model_output[0], "text"])
             output.append(["Attention plot", model_output[1], "image"])
         # add as many as you have
