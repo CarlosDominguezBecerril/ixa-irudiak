@@ -7,6 +7,7 @@ from models.image_captioning.ShowAndTell import run_model as oier
 from models.image_captioning.ShowAttendAndTell import run_model as gorka
 from models.text_to_image.text2bb import run_model as text2bb
 
+from multiprocessing import Pool
 def run_all_models(models_list: list, app_name: str, applications: dict, user_input:str):
     """
     This function runs all the models in models_list.
@@ -61,21 +62,24 @@ def run_text_to_image(model: Model, user_input: str):
     try:
         # Model 'sg2im'
         if model.short_name == "TextToBoundingBoxV1":
-            model_output = text2bb.run_model(user_input, model.model_info)
+            with Pool(1) as p:
+                model_output = p.apply(text2bb.run_model, (user_input, model.model_info))
             output.append(["Output", model_output[0], "image"])
             output.append(["Scene graph", model_output[1], "image"])
             output.append(["Objects list", model_output[2], "text"])
             output.append(["Relations list", model_output[3], "text"])
             output.append(["Triples list", model_output[4], "text"])
         elif model.short_name == "TextToBoundingBoxV2":
-            model_output = text2bb.run_model(user_input, model.model_info)
+            with Pool(1) as p:
+                model_output = p.apply(text2bb.run_model, (user_input, model.model_info))
             output.append(["Output", model_output[0], "image"])
             output.append(["Scene graph", model_output[1], "image"])
             output.append(["Objects list", model_output[2], "text"])
             output.append(["Relations list", model_output[3], "text"])
             output.append(["Triples list", model_output[4], "text"])
         elif model.short_name == "TextToBoundingBoxV3":
-            model_output = text2bb.run_model(user_input, model.model_info)
+            with Pool(1) as p:
+                model_output = p.apply(text2bb.run_model, (user_input, model.model_info))
             output.append(["Output", model_output[0], "image"])
             output.append(["Scene graph", model_output[1], "image"])
             output.append(["Objects list", model_output[2], "text"])
@@ -102,10 +106,13 @@ def run_image_cap(model: Model, user_input: str):
     try:
         # Model 'Oier'
         if model.short_name == "ShowAndTell":
-            model_output = oier.run_model(user_input, model.model_info)
+            with Pool(1) as p:
+                model_output = p.apply(oier.run_model, (user_input, model.model_info))
+                # smodel_output = oier.run_model(user_input, model.model_info)
             output.append(["Output", model_output, "text"])
         elif model.short_name == "ShowAttendAndTell":
-            model_output = gorka.run_model(user_input, model.model_info)
+            with Pool(1) as p:
+                model_output = p.apply(gorka.run_model, (user_input, model.model_info))
             output.append(["Output", model_output[0], "text"])
             output.append(["Attention plot", model_output[1], "image"])
         else:

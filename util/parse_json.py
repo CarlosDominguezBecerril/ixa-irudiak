@@ -40,6 +40,8 @@ def parse_applications(app_path: str):
         if validJson:
             if app["short_name"] in applications:
                 print("There is already an application with the name: {}".format(app["short_name"]))
+            elif 'show' in app and app['show'] == False:
+                print("The show value is set to false. Not showing this application")
             else:
                 applications[app["short_name"].replace(" ", "")] = Application(app["name"], app["description"], app["path"], app['type'])
 
