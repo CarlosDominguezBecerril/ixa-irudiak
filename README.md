@@ -20,37 +20,37 @@ Results
 
 ## Libraries used
 
-> pip install flask
+> pip install flask==1.1.2
 
-> pip install nltk
+> pip install nltk==3.5
 
 > pip install scipy==1.4.1
 
 > pip install Keras==2.3.1
 
-> pip install tensorflow
+> pip install tensorflow==2.2.0
 
-> pip install Pillow
+> pip install Pillow==7.2.0
 
-> pip install matplotlib
+> pip install matplotlib==3.3.2
 
-> pip install scikit-learn
+> pip install scikit-learn==0.23.1
 
-> pip install numpy
+> pip install numpy==1.19.0
 
-> pip install torch
+> pip install torch==1.5.1
 
-> pip install torchvision
+> pip install torchvision==0.6.1
 
-> pip install torchtext
+> pip install torchtext==0.6.0
 
-> pip install tabulate
+> pip install tabulate==0.8.7
 
-> pip install spacy
+> pip install spacy==2.3.2
 
 > python -m spacy download en (To use the parser for English)
 
-> pip install imageio
+> pip install imageio==2.9.0
 
 In order to ease the installation you can just:
 
