@@ -60,9 +60,11 @@ In order to ease the installation you can just:
 
 ## Running the web server
 
-1 Execute app.py (you may need root permissions)
+1 Download the pretrained models folder from [here](https://drive.google.com/file/d/1bnLbhr9QT2iLkqNJDhKlQOOSOGn6P9VI/view?usp=sharing) an extract it in the root directory.
 
-2 Open your web browser and search for "localhost:port", by default "localhost:80" or simply "localhost". The port can be changed in config.json.
+2 Execute app.py (you may need root permissions. This can be done running "sudo -s" in the terminal.)
+
+3 Open your web browser and search for "localhost:port", by default "localhost:80" or simply "localhost". The port can be changed in config.json.
 
 ## How to create an application
 
