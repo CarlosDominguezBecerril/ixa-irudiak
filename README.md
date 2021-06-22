@@ -20,6 +20,8 @@ Results
 
 ## Libraries used
 
+Some libraries may not be necessary if you are using your own models.
+
 > pip install flask==1.1.2
 
 > pip install nltk==3.5
@@ -48,14 +50,13 @@ Results
 
 > pip install spacy==2.3.2
 
-> python -m spacy download en (To use the parser for English)
-
 > pip install imageio==2.9.0
 
 In order to ease the installation you can just:
 
 > pip install -r requirements.txt
 
+Spacy english parser:
 > python -m spacy download en
 
 ## Running the web server
